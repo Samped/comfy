@@ -86,16 +86,16 @@ const Home = () => {
                    }}
                  >
                    <span className="gradient-text animate-gradient">Comfy Verse</span>
-                   <br />
+            <br />
                    <span className="text-white">Community Page</span>
-                 </h1>
+          </h1>
                            <p 
                    className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
                    style={{ 
                      transform: `translateY(${scrollY * 0.05}px)`
                    }}
                  >
-                   Where brilliant minds connect, collaborate, and create the future together.
+            Where brilliant minds connect, collaborate, and create the future together. 
                  </p>
                  <div 
                    className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
@@ -108,13 +108,17 @@ const Home = () => {
                      key={currentRoleIndex}
                      className="gradient-text typing-text"
                      style={{ 
-                       transform: `translateY(${scrollY * 0.05}px)`
+                       transform: `translateY(${scrollY * 0.05}px)`,
+                       display: 'inline-block',
+                       lineHeight: '1',
+                       verticalAlign: 'middle',
+                       marginTop: '-0.2em'
                      }}
                    >
                      {currentText || 'dreamers'}
                      {isTyping && <span className="typing-cursor">|</span>}
                    </span>
-                 </div>
+          </div>
           
         </div>
 
@@ -126,66 +130,40 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Comfy's House Stats Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 
-              className="text-3xl sm:text-4xl font-bold text-white mb-4"
-              style={{ 
-                transform: `translateY(${scrollY * 0.05}px)`
-              }}
-            >
-              Why Choose Comfy Verse?
+          <div className="glass p-6 rounded-3xl border border-gray-700/50 backdrop-blur-sm">
+            <div className="text-center mb-6 mt-4">
+              <h2 
+                className="text-4xl sm:text-5xl font-black text-white mb-2 animate-pulse-slow"
+                style={{ 
+                  textShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
+                }}
+              >
+                Comfy's House
             </h2>
-            <p 
-              className="text-xl text-gray-300 max-w-2xl mx-auto"
-              style={{ 
-                transform: `translateY(${scrollY * 0.03}px)`
-              }}
-            >
-              Discover what makes our community special and how we're building the future together.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Users,
-                title: "Global Network",
-                description: "Connect with developers, designers, and innovators from around the world. Share knowledge, collaborate on projects, and grow together.",
-                color: "from-primary-500 to-primary-600"
-              },
-              {
-                icon: Lightbulb,
-                title: "Innovation Hub",
-                description: "Access cutting-edge tools, resources, and mentorship to bring your ideas to life. Turn your vision into reality with our supportive ecosystem.",
-                color: "from-secondary-500 to-secondary-600"
-              },
-              {
-                icon: Rocket,
-                title: "Rapid Growth",
-                description: "Accelerate your career and project development with our community-driven approach. Learn from experts and showcase your work to the world.",
-                color: "from-primary-500 to-secondary-500"
-              }
-            ].map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <div 
-                  key={index} 
-                  className="glass p-8 rounded-2xl card-hover"
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              {[
+                { number: "15+", label: "Community Games", path: "/community-games" },
+                { number: "25+", label: "Comfy Art", path: "/comfy" },
+                { number: "40+", label: "Art Pieces", path: "/art/drawing" },
+                { number: "12+", label: "Videos", path: "/art/invideo" }
+              ].map((stat, index) => (
+                <Link 
+                  key={index}
+                  to={stat.path}
+                  className="block p-6 rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30 hover:scale-105 transition-all duration-300 hover:border-primary-500/50 cursor-pointer"
                   style={{ 
-                    transform: `translateY(${scrollY * 0.02}px) rotateY(${scrollY * 0.005}deg)`
+                    transform: `translateY(${scrollY * 0.01}px)`
                   }}
                 >
-                  <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-6 animate-float`}>
-                    <Icon className="w-8 h-8 text-white animate-pulse-slow" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
-                  <p className="text-gray-300">{feature.description}</p>
-                </div>
-              )
-            })}
+                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 animate-pulse-slow">{stat.number}</div>
+                  <div className="text-gray-300 font-medium">{stat.label}</div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -209,7 +187,7 @@ const Home = () => {
               >
                 <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{stat.number}</div>
                 <div className="text-gray-300">{stat.label}</div>
-              </div>
+            </div>
             ))}
           </div>
         </div>

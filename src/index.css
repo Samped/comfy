@@ -24,7 +24,12 @@
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent;
+    background: linear-gradient(135deg, #1B3E86 0%, #3673F5 20%, #8EB1F9 40%, #E7EEFE 60%, #E8FCF0 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
   }
 }
 
@@ -222,7 +227,6 @@
 }
 
 .typing-text {
-  animation: slideIn 0.8s ease-out;
   position: relative;
   display: inline-block;
   font-size: 1.2em;
@@ -238,4 +242,43 @@
   font-weight: bold;
   margin-left: 2px;
   opacity: 0.8;
+}
+
+/* Rotating Box Animations */
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.group:hover .rotate-y-12 {
+  transform: rotateY(12deg);
+}
+
+/* Enhanced hover effects for rotating boxes */
+.group:hover .scale-110 {
+  transform: scale(1.1);
+}
+
+/* Smooth transitions for expanding content */
+.transform {
+  transition: all 0.5s ease-out;
+}
+
+/* Glass effect for rotating boxes */
+.glass-rotate {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 } 
