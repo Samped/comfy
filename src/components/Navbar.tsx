@@ -55,7 +55,7 @@ const Navbar = () => {
                 >
                   {item.customIcon ? (
                     <img 
-                      src={`/comfy/${item.customIcon}`} 
+                      src={`/${item.customIcon}`} 
                       alt={item.label}
                       className="w-5 h-5 object-contain"
                     />
