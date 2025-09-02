@@ -7,8 +7,27 @@ const Home = () => {
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0)
   const [currentText, setCurrentText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
+  
+  const comfyImages = [
+    'cm.webp',
+    'cmpng.webp', 
+    'hey.webp',
+    'skin_3.webp',
+    'tyson.webp',
+    'comfy.webp',
+    'облако1.webp',
+    'облако2.webp',
+    'muscles.webp',
+    'magician.webp',
+    'guts.webp',
+    'armored_(1).webp',
+    'alch.webp',
+    'cm_-cm.gif',
+    'poker.webp'
+  ]
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -50,6 +69,91 @@ const Home = () => {
     }
   }, [currentRoleIndex])
 
+  // Image cycling effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % comfyImages.length)
+    }, 3000) // Change image every 3 seconds for slower cycling
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Generate random positions
+  const getRandomPosition = (index: number) => {
+    const positions = [
+      // Top edge - more positions
+      { top: '5%', left: '5%' },
+      { top: '10%', left: '30%' },
+      { top: '12%', left: '45%' },
+      { top: '10%', right: '20%' },
+      { top: '12%', right: '35%' },
+      { top: '15%', right: '50%' },
+      
+      // Left edge - more positions
+      { top: '20%', left: '3%' },
+
+      { top: '40%', left: '8%' },
+      { top: '50%', left: '3%' },
+      { top: '70%', left: '4%' },
+      { top: '80%', left: '7%' },
+      
+      // Right edge - more positions
+      { top: '25%', right: '3%' },
+      { top: '35%', right: '5%' },
+      { top: '45%', right: '8%' },
+      { top: '55%', right: '3%' },
+      { top: '65%', right: '6%' },
+      { top: '75%', right: '4%' },
+      { top: '85%', right: '7%' },
+      
+      // Bottom edge - more positions
+      { bottom: '5%', left: '8%' },
+      { bottom: '8%', left: '25%' },
+      { bottom: '10%', left: '40%' },
+      { bottom: '12%', left: '55%' },
+     
+      { bottom: '10%', right: '25%' },
+      { bottom: '12%', right: '40%' },
+      { bottom: '15%', right: '55%' },
+      
+      // Corner areas - more precise
+      { top: '3%', left: '2%' },
+      { top: '3%', right: '2%' },
+      { bottom: '3%', left: '2%' },
+      { bottom: '3%', right: '2%' },
+      
+      // Mid-edges
+      { top: '50%', left: '1%' },
+      { top: '50%', right: '1%' },
+      { left: '50%', top: '5%' },
+      { left: '50%', bottom: '5%' },
+      
+      // Additional edge variations
+      { top: '15%', left: '8%' },
+      { top: '18%', right: '12%' },
+      { bottom: '18%', left: '12%' },
+      { bottom: '15%', right: '8%' },
+      
+      // More corner variations
+      { top: '6%', left: '12%' },
+      { top: '6%', right: '12%' },
+      { bottom: '6%', left: '12%' },
+      { bottom: '6%', right: '12%' },
+      
+      // Edge center points
+      { top: '25%', left: '0%' },
+      { top: '25%', right: '0%' },
+      { bottom: '25%', left: '0%' },
+      { bottom: '25%', right: '0%' },
+      { left: '25%', top: '0%' },
+      { left: '25%', bottom: '0%' },
+      { right: '25%', top: '0%' },
+      { right: '25%', bottom: '0%' }
+    ]
+    
+    return positions[index % positions.length]
+  }
+
   return (
     <div className="pt-16">
       {/* Hero Section */}
@@ -76,6 +180,19 @@ const Home = () => {
           <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-secondary-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
           <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-primary-300 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
           <div className="absolute bottom-1/4 right-1/4 w-3 h-3 bg-secondary-300 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
+        </div>
+
+        {/* Animated Comfy Images - Random Positions */}
+        <div className="absolute inset-0 pointer-events-none">
+          <img 
+            src={`/comfy/${comfyImages[currentImageIndex]}`}
+            alt={`Comfy ${comfyImages[currentImageIndex]}`}
+            className="absolute w-40 h-40 opacity-70 animate-float-slow transition-all duration-1000"
+            style={{ 
+              ...getRandomPosition(currentImageIndex),
+              animation: 'float 6s ease-in-out infinite, randomMove 12s ease-in-out infinite'
+            }}
+          />
         </div>
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
