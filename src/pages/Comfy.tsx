@@ -89,7 +89,7 @@ const Comfy = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {comfyImages.map((image, index) => (
             <div key={index} className="text-center group">
-              <div className="glass p-8 rounded-xl card-hover mb-3">
+              <div className="bg-white/3 backdrop-blur-md border border-white/10 p-8 rounded-xl card-hover mb-3">
                 <img 
                   src={`/comfy/${image.filename}`}
                   alt={image.name}
