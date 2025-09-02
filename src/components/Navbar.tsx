@@ -32,9 +32,9 @@ const Navbar = () => {
             <img 
               src="/comfy.webp" 
               alt="Comfy Verse Logo" 
-              className="w-12 h-12 object-cover transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 animate-float" 
+              className="w-12 h-12 object-cover transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" 
             />
-            <span className="text-xl font-bold gradient-text animate-gradient group-hover:animate-wiggle transition-all duration-300">
+            <span className="text-xl font-bold gradient-text group-hover:animate-wiggle transition-all duration-300">
               Comfy Verse
             </span>
           </Link>
@@ -49,18 +49,18 @@ const Navbar = () => {
                   to={item.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover-lift ${
                     isActive(item.path)
-                      ? 'text-primary-400 bg-primary-400/10 animate-pulse-glow'
-                      : 'text-gray-300 hover:text-white hover:bg-white/10 hover-glow'
+                      ? 'text-primary-400 bg-primary-400/10'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {item.customIcon ? (
                     <img 
-                      src={`/${item.customIcon}`} 
-                      alt={`${item.label} icon`} 
-                      className="w-4 h-4 object-contain transition-transform duration-300 group-hover:animate-bounce-x" 
+                      src={`/comfy/${item.customIcon}`} 
+                      alt={item.label}
+                      className="w-5 h-5 object-contain"
                     />
-                  ) : Icon && (
-                    <Icon className="w-4 h-4 transition-transform duration-300 group-hover:animate-bounce-x" />
+                  ) : (
+                    <Icon className="w-5 h-5" />
                   )}
                   <span>{item.label}</span>
                 </Link>
@@ -73,7 +73,7 @@ const Navbar = () => {
                 onClick={() => setIsArtDropdownOpen(!isArtDropdownOpen)}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover-lift ${
                   isArtActive('/art')
-                    ? 'text-primary-400 bg-primary-400/10 animate-pulse-glow'
+                    ? 'text-primary-400 bg-primary-400/10'
                     : 'text-gray-300 hover:text-white hover:bg-white/10 hover-glow'
                 }`}
               >

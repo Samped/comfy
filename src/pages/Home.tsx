@@ -187,7 +187,7 @@ const Home = () => {
           <img 
             src={`/comfy/${comfyImages[currentImageIndex]}`}
             alt={`Comfy ${comfyImages[currentImageIndex]}`}
-            className="absolute w-40 h-40 opacity-70 animate-float-slow transition-all duration-1000"
+            className="absolute w-16 h-16 md:w-40 md:h-40 opacity-70 animate-float-slow transition-all duration-1000"
             style={{ 
               ...getRandomPosition(currentImageIndex),
               animation: 'float 6s ease-in-out infinite, randomMove 12s ease-in-out infinite'
@@ -196,44 +196,43 @@ const Home = () => {
         </div>
 
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-                           <h1 
-                   className="text-5xl sm:text-7xl lg:text-8xl font-bold mb-8"
-                   style={{ 
-                     transform: `translateY(${scrollY * 0.1}px)`
-                   }}
-                 >
-                   <span className="gradient-text animate-gradient">Comfy Verse</span>
-            <br />
-                   <span className="text-white">Community Page</span>
+          <h1 
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-8"
+            style={{ 
+              transform: `translateY(${scrollY * 0.1}px)`
+            }}
+          >
+            <span className="gradient-text animate-gradient">Comfy Verse</span>
+            <span className="text-white"> Community Page</span>
           </h1>
-                           <p 
-                   className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
-                   style={{ 
-                     transform: `translateY(${scrollY * 0.05}px)`
-                   }}
-                 >
+          <p 
+            className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+            style={{ 
+              transform: `translateY(${scrollY * 0.05}px)`
+            }}
+          >
             Where brilliant minds connect, collaborate, and create the future together. 
-                 </p>
-                 <div 
-                   className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
-                   style={{ 
-                     transform: `translateY(${scrollY * 0.05}px)`
-                   }}
-                 >
-                   <span className="text-2xl sm:text-3xl lg:text-4xl font-bold">A hub for </span>
-                   <span 
-                     key={currentRoleIndex}
-                     className="gradient-text typing-text"
-                     style={{ 
-                       display: 'inline-block',
-                       lineHeight: '1',
-                       verticalAlign: 'middle',
-                       marginTop: '-0.2em'
-                     }}
-                   >
-                     {currentText || 'dreamers'}
-                     {isTyping && <span className="typing-cursor">|</span>}
-                   </span>
+          </p>
+          <div 
+            className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
+            style={{ 
+              transform: `translateY(${scrollY * 0.05}px)`
+            }}
+          >
+            <span className="text-2xl sm:text-3xl lg:text-4xl font-bold">A hub for </span>
+            <span 
+              key={currentRoleIndex}
+              className="gradient-text typing-text"
+              style={{ 
+                display: 'inline-block',
+                lineHeight: '1',
+                verticalAlign: 'middle',
+                marginTop: '-0.2em'
+              }}
+            >
+              {currentText || 'dreamers'}
+              {isTyping && <span className="typing-cursor">|</span>}
+            </span>
           </div>
           
         </div>
