@@ -1,149 +1,167 @@
-import React from 'react'
-import { Palette, Heart, Share2, Download, Eye } from 'lucide-react'
+import React, { useState } from 'react'
+import { Download, X } from 'lucide-react'
 
 const Comfy = () => {
-  const comfyArt = [
-    {
-      title: 'Cozy Cottage Dreams',
-      artist: 'Emma Wilson',
-      description: 'A warm, inviting cottage scene with soft lighting and comfortable vibes.',
-      likes: 342,
-      views: 1200,
-      category: 'Digital Art',
-      image: '🏡',
-      tags: ['cozy', 'cottage', 'warm', 'comfortable']
-    },
-    {
-      title: 'Rainy Day Comfort',
-      artist: 'David Park',
-      description: 'A peaceful rainy day scene with warm blankets and hot tea vibes.',
-      likes: 287,
-      views: 980,
-      category: 'Illustration',
-      image: '🌧️',
-      tags: ['rainy', 'peaceful', 'warm', 'tea']
-    },
-    {
-      title: 'Sunset Serenity',
-      artist: 'Lisa Thompson',
-      description: 'A calming sunset landscape that brings peace and tranquility.',
-      likes: 456,
-      views: 1500,
-      category: 'Landscape',
-      image: '🌅',
-      tags: ['sunset', 'serene', 'peaceful', 'nature']
-    },
-    {
-      title: 'Morning Coffee Bliss',
-      artist: 'Alex Chen',
-      description: 'The perfect morning coffee moment captured in warm, inviting colors.',
-      likes: 389,
-      views: 1100,
-      category: 'Still Life',
-      image: '☕',
-      tags: ['coffee', 'morning', 'warm', 'inviting']
-    },
-    {
-      title: 'Forest Sanctuary',
-      artist: 'Sarah Kim',
-      description: 'A magical forest scene that feels like a safe, comfortable haven.',
-      likes: 523,
-      views: 1800,
-      category: 'Fantasy',
-      image: '🌲',
-      tags: ['forest', 'magical', 'safe', 'haven']
-    },
-    {
-      title: 'Book Nook Corner',
-      artist: 'Marcus Rodriguez',
-      description: 'A cozy reading corner that makes you want to curl up with a good book.',
-      likes: 298,
-      views: 950,
-      category: 'Interior',
-      image: '📚',
-      tags: ['reading', 'cozy', 'books', 'corner']
-    }
+  const [selectedImage, setSelectedImage] = useState<{name: string, filename: string} | null>(null)
+
+  // List of all images from public/comfy folder
+  const comfyImages = [
+
+    { name: 'crazy', filename: 'crazy.webp' },
+    { name: 'playboi carti', filename: 'pc.webp' },
+    { name: 'wow', filename: 'wow.webp' },
+    { name: 'uncm', filename: 'cm_-cm.gif' },
+    { name: 'Poker', filename: 'poker.webp' },
+    { name: 'CS16', filename: 'cs16.webp' },
+    { name: 'emm..', filename: 'emm.webp' },
+    { name: 'coffee', filename: 'cm.webp' },
+    { name: 'hey', filename: 'hey.webp' },
+    { name: 'chef', filename: 'GtZMljIXQAAOt2G.webp' },
+    { name: 'grass', filename: 'GtZCHINb0AACey_.webp' },
+    { name: 'cute', filename: 'GtMsUysXAAA7pLX.webp' },
+    { name: 'comfy vs pepe', filename: 'fight.webp' },
+    { name: 'cute', filename: 'skin_3.webp' },
+    { name: 'vampire', filename: 'skin_4.webp' },
+    { name: 'skull', filename: 'cleaned_image.webp' },
+    { name: 'milday', filename: 'incosticker.webp' },
+    { name: 'private', filename: 'GsVzeA5WEAAatw5.webp' },
+    { name: 'CM', filename: 'cmpng.webp' },
+    { name: 'cute', filename: 'inco11.webp' },
+    { name: 'cleaning', filename: 'Inco_Resized_Vashing_Animated.gif' },
+    { name: 'silento', filename: 'Inco_Resized_SIGMA_animanted.gif' },
+    { name: 'gn', filename: 'Inco_Resized_GNV2.0_Animated.gif' },
+    { name: 'angry', filename: 'Без_имени-5.webp' },
+    { name: 'love', filename: 'Без_имени-4.webp' },
+    { name: 'artist', filename: 'Без_имени-3.webp' },
+    { name: 'boxer', filename: 'tyson.webp' },
+    { name: 'muscles', filename: 'muscles.webp' },
+    { name: 'mag', filename: 'magician.webp' },
+    { name: 'bersek', filename: 'guts.webp' },
+    { name: 'gangster', filename: 'armored_(1).webp' },
+    { name: 'alch', filename: 'alch.webp' },
+    { name: ': 333', filename: 'GruehmWXoAETIof.webp' },
+    { name: 'gun', filename: 'photo_2025-05-26_20-17-43.webp' },
+    { name: 'explorer', filename: 'photo_2025-05-26_20-17-40.webp' },
+    { name: 'sad', filename: 'photo_2025-05-26_20-17-36.webp' },
+    { name: 'lazy', filename: 'photo_2025-05-26_20-17-33.webp' },
+    { name: 'wine', filename: 'photo_2025-05-26_20-17-27.webp' },
+    { name: 'angry', filename: 'облако2.webp' },
+    { name: 'fun', filename: 'облако1.webp' },
+    { name: ': 3', filename: 'облако4.webp' },
+    { name: 'inco comfy 3', filename: 'облако3.webp' },
+    { name: 'comfy original', filename: 'cloud__1_ (1).webp' },
+    { name: 'vibecoding', filename: 'image_(3).webp' },
+    { name: 'Quiz', filename: 'quiz.webp' },
+    { name: 'Community', filename: 'community.webp' },
+    { name: 'Poker', filename: 'poker (1).webp' },
+    { name: 'Chess', filename: 'chess_(1).webp' },
   ]
+
+  const handleDownload = (filename: string, name: string) => {
+    const link = document.createElement('a')
+    link.href = `/comfy/${filename}`
+    link.download = `${name}.${filename.split('.').pop()}`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const openFullscreen = (image: {name: string, filename: string}) => {
+    setSelectedImage(image)
+  }
+
+  const closeFullscreen = () => {
+    setSelectedImage(null)
+  }
 
   return (
     <div className="pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            <span className="gradient-text">Comfy</span> Art
+            <span className="gradient-text">Comfy</span> Collection
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Discover the most comfortable and cozy artwork created by our community. 
-            Art that makes you feel warm, safe, and at peace.
+            Browse through our collection of comfy images and artwork.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {comfyArt.map((art, index) => (
-            <div key={index} className="glass p-6 rounded-2xl card-hover">
-              <div className="text-center mb-4">
-                <div className="text-5xl mb-3">{art.image}</div>
-                <h3 className="text-xl font-semibold text-white mb-1">{art.title}</h3>
-                <p className="text-primary-400 text-sm mb-2">by {art.artist}</p>
-                <span className="px-3 py-1 bg-secondary-500/20 text-secondary-300 text-sm rounded-full border border-secondary-500/30">
-                  {art.category}
-                </span>
-              </div>
-              
-              <p className="text-gray-300 mb-4 text-center">{art.description}</p>
-              
-              <div className="flex flex-wrap gap-2 justify-center mb-4">
-                {art.tags.map((tag, tagIndex) => (
-                  <span
-                    key={tagIndex}
-                    className="px-2 py-1 bg-primary-500/20 text-primary-300 text-xs rounded-full border border-primary-500/30"
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {comfyImages.map((image, index) => (
+            <div key={index} className="text-center group">
+              <div className="glass p-8 rounded-xl card-hover mb-3">
+                <img 
+                  src={`/comfy/${image.filename}`}
+                  alt={image.name}
+                  className="w-full h-56 object-cover rounded-lg mb-4 cursor-pointer hover:scale-105 transition-transform duration-300"
+                  onClick={() => openFullscreen(image)}
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder-image.jpg'
+                  }}
+                />
+                
+                <div className="flex items-center justify-center space-x-2">
+                  <h3 className="text-base font-medium text-white truncate">
+                    {image.name}
+                  </h3>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDownload(image.filename, image.name)
+                    }}
+                    className="p-1 hover:bg-primary-500/20 rounded-full transition-all duration-300 hover:scale-110"
+                    title="Download image"
                   >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-              
-              <div className="flex items-center justify-between text-gray-400 text-sm mb-4">
-                <div className="flex items-center space-x-1">
-                  <Heart className="w-4 h-4" />
-                  <span>{art.likes}</span>
+                    <Download className="w-4 h-4 text-primary-400 hover:text-white" />
+                  </button>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Eye className="w-4 h-4" />
-                  <span>{art.views}</span>
-                </div>
-              </div>
-              
-              <div className="flex space-x-2">
-                <button className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105">
-                  <Heart className="w-4 h-4" />
-                  <span>Like</span>
-                </button>
-                <button className="px-3 py-2 glass text-white font-semibold rounded-lg hover:bg-white/20 transition-all duration-300">
-                  <Share2 className="w-4 h-4" />
-                </button>
-                <button className="px-3 py-2 glass text-white font-semibold rounded-lg hover:bg-white/20 transition-all duration-300">
-                  <Download className="w-4 h-4" />
-                </button>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <div className="glass p-8 rounded-2xl inline-block">
-            <h2 className="text-2xl font-bold text-white mb-4">Share Your Comfy Art</h2>
-            <p className="text-gray-300 mb-6">
-              Have artwork that makes people feel comfortable and cozy? Share it with our community!
-            </p>
-            <button className="px-8 py-3 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300">
-              Submit Your Art
-            </button>
+        {/* Fullscreen Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closeFullscreen}
+          >
+            <div className="relative w-full h-full flex items-center justify-center">
+              <button
+                onClick={closeFullscreen}
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-all duration-300"
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+              
+              <img 
+                src={`/comfy/${selectedImage.filename}`}
+                alt={selectedImage.name}
+                className="max-w-full max-h-full w-auto h-auto object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                <h3 className="text-white text-xl font-semibold bg-black/50 px-4 py-2 rounded-lg">
+                  {selectedImage.name}
+                </h3>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDownload(selectedImage.filename, selectedImage.name)
+                  }}
+                  className="p-3 bg-primary-500/80 hover:bg-primary-500 rounded-full transition-all duration-300 hover:scale-110"
+                  title="Download image"
+                >
+                  <Download className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
 }
 
-export default Comfy 
+export default Comfy

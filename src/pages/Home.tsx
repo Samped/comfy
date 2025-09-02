@@ -108,7 +108,6 @@ const Home = () => {
                      key={currentRoleIndex}
                      className="gradient-text typing-text"
                      style={{ 
-                       transform: `translateY(${scrollY * 0.05}px)`,
                        display: 'inline-block',
                        lineHeight: '1',
                        verticalAlign: 'middle',
@@ -196,4 +195,4 @@ const Home = () => {
   )
 }
 
-export default Home 
+export default Home
