@@ -5,10 +5,18 @@ const ArtCommunityCanvases = () => {
   // Load all images from public/community canvas as URLs (Vite)
   const canvasImages = useMemo(() => {
     const modules = import.meta.glob('/public/community canvas/*', { eager: true, as: 'url' }) as Record<string, string>
-    const items = Object.entries(modules).map(([path, url]) => {
+    const items = Object.entries(modules).map(([path, url], index) => {
       const name = path.split('/').pop() || 'canvas'
       // Remove file extension from display name
-      const displayName = name.replace(/\.(png|jpg|jpeg|gif|webp)$/i, '')
+      let displayName = name.replace(/\.(png|jpg|jpeg|gif|webp)$/i, '')
+      
+      // Set custom names for the first two canvases
+      if (index === 1) {
+        displayName = "inCreatives #1 (we broke excalidraw)"
+      } else if (index === 0) {
+        displayName = "InCreatives #2 (everything worked fine lol)"
+      }
+      
       return { name: displayName, url }
     })
     return items.sort((a, b) => a.name.localeCompare(b.name))
