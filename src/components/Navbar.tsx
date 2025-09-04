@@ -14,7 +14,6 @@ const Navbar = () => {
   ]
 
   const artDropdownItems = [
-    { path: '/art/drawing', label: 'Drawing' },
     { path: '/art/invideo', label: 'InVideo' },
     { path: '/art/meme', label: 'Meme' },
     { path: '/art/community-canvases', label: 'Community Canvases' },
@@ -60,7 +59,7 @@ const Navbar = () => {
                       className="w-5 h-5 object-contain"
                     />
                   ) : (
-                    <Icon className="w-5 h-5" />
+                    Icon ? <Icon className="w-5 h-5" /> : null
                   )}
                   <span>{item.label}</span>
                 </Link>

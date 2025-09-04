@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Users, Lightbulb, Rocket, Star } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Users, Lightbulb, Rocket, Star, Gamepad2, Palette, ImageIcon, Film, Music, Smile } from 'lucide-react'
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -9,6 +9,7 @@ const Home = () => {
   const [isTyping, setIsTyping] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imageVisible, setImageVisible] = useState(true)
+  const [currentExploreIndex, setCurrentExploreIndex] = useState(0)
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
   
@@ -29,6 +30,27 @@ const Home = () => {
     'cm_-cm.gif',
     'poker.webp'
   ]
+
+  const exploreItems = [
+    { label: 'Community Games', path: '/community-games', Icon: Gamepad2 },
+    { label: 'Comfy', path: '/comfy', Icon: ImageIcon },
+    { label: 'InVideo', path: '/art/invideo', Icon: Film },
+    { label: 'Meme', path: '/art/meme', Icon: Smile },
+    { label: 'Inco Beats', path: '/', Icon: Music }
+  ]
+
+  const showPrevExplore = () => {
+    setCurrentExploreIndex((prev) => (prev - 1 + exploreItems.length) % exploreItems.length)
+  }
+
+  const showNextExplore = () => {
+    setCurrentExploreIndex((prev) => (prev + 1) % exploreItems.length)
+  }
+
+  const getExploreAt = (offset: number) => {
+    const idx = (currentExploreIndex + offset + exploreItems.length) % exploreItems.length
+    return exploreItems[idx]
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -251,21 +273,21 @@ const Home = () => {
 
         {/* Enhanced Floating Elements */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-4">
-          <div className="w-3 h-3 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-          <div className="w-3 h-3 bg-secondary-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-3 h-3 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
         </div>
       </section>
 
       {/* Comfy's House Stats Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="glass p-6 rounded-3xl border border-gray-700/50 backdrop-blur-sm">
+          <div className="p-6 rounded-3xl bg-white/3 backdrop-blur-md border border-white/10">
             <div className="text-center mb-6 mt-4">
               <h2 
-                className="text-4xl sm:text-5xl font-black text-white mb-2 animate-pulse-slow"
+                className="text-2xl sm:text-3xl font-bold text-white mb-2"
                 style={{ 
-                  textShadow: '0 0 20px rgba(59, 130, 246, 0.5)'
+                  textShadow: '0 0 12px rgba(59, 130, 246, 0.35)'
                 }}
               >
                 Comfy's House
@@ -275,19 +297,19 @@ const Home = () => {
               {[
                 { number: "15+", label: "Community Games", path: "/community-games" },
                 { number: "25+", label: "Comfy Art", path: "/comfy" },
-                { number: "40+", label: "Art Pieces", path: "/art/drawing" },
+                { number: "40+", label: "Art Pieces", path: "/comfy" },
                 { number: "12+", label: "Videos", path: "/art/invideo" }
               ].map((stat, index) => (
                 <Link 
                   key={index}
                   to={stat.path}
-                  className="block p-6 rounded-2xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/30 hover:scale-105 transition-all duration-300 hover:border-primary-500/50 cursor-pointer"
+                  className="block p-3 md:p-4 rounded-xl bg-white/3 backdrop-blur-md border border-white/10 hover:scale-105 transition-all duration-300 hover:border-primary-500/50 cursor-pointer"
                   style={{ 
                     transform: `translateY(${scrollY * 0.01}px)`
                   }}
                 >
-                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2 animate-pulse-slow">{stat.number}</div>
-                  <div className="text-gray-300 font-medium">{stat.label}</div>
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold gradient-text animate-gradient mb-1">{stat.number}</div>
+                  <div className="text-sm sm:text-base md:text-lg font-semibold gradient-text animate-gradient">{stat.label}</div>
                 </Link>
               ))}
             </div>
@@ -295,6 +317,70 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Circular Scrollable Tabs → Replaced with Carousel */}
+      <section className="py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative">
+            {/* Explore Carousel (no header/subtext) */}
+            <div className="relative w-full max-w-4xl h-56 md:h-72 mx-auto flex items-center justify-center">
+              {/* Side previews */}
+              {[-1, 1].map((offset) => {
+                const item = getExploreAt(offset)
+                const isLeft = offset === -1
+                return (
+                  <Link
+                    key={offset}
+                    to={item.path}
+                    className={`absolute ${isLeft ? 'left-1/2 -translate-x-[70%]' : 'left-1/2 -translate-x-[30%]'} -translate-y-1/2 top-1/2 pointer-events-auto`}
+                  >
+                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/40 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-25 scale-75">
+                      <item.Icon className="w-8 h-8 md:w-10 md:h-10 text-primary-300 mb-2" />
+                      <span className="text-xs md:text-sm font-semibold text-gray-200 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })}
+
+              {/* Main item */}
+              {(() => {
+                const item = getExploreAt(0)
+                return (
+                  <Link
+                    to={item.path}
+                    className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-auto"
+                  >
+                    <div className="w-40 h-40 md:w-60 md:h-60 rounded-full bg-gradient-to-br from-gray-800/70 to-gray-900/70 border border-gray-700/50 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-100 scale-100 shadow-2xl">
+                      <item.Icon className="w-16 h-16 md:w-24 md:h-24 text-primary-300 mb-3" />
+                      <span className="text-sm md:text-lg font-semibold text-gray-100 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })()}
+
+              {/* Arrows (faint) */}
+              <button
+                aria-label="Previous"
+                onClick={showPrevExplore}
+                className="absolute left-1 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                aria-label="Next"
+                onClick={showNextExplore}
+                className="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+ 
       {/* Stats Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">

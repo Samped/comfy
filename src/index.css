@@ -31,6 +31,13 @@
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;
   }
+
+  /* New: gradient background for non-text elements */
+  .gradient-bg {
+    background: linear-gradient(135deg, #1B3E86 0%, #3673F5 20%, #8EB1F9 40%, #E7EEFE 60%, #E8FCF0 100%);
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
 }
 
 /* Fun Animations */
