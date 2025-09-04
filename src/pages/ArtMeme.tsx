@@ -13,13 +13,15 @@ const ArtMeme = () => {
   }, [])
 
   return (
-    <div className="pt-16 min-h-screen relative overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            <span className="gradient-text">Comfy Memes</span>
+    <div className="pt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            <span className="gradient-text">Comfy</span> Meme
           </h1>
-          <p className="text-gray-300 mt-2">A gallery of memes from our community.</p>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            A gallery of memes from our community.
+          </p>
         </div>
 
         {memeImages.length === 0 ? (

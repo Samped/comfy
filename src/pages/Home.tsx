@@ -114,7 +114,6 @@ const Home = () => {
     const positions = [
       // Top edge - more positions
       { top: '15%', left: '15%' },
-      { top: '20%', left: '30%' },
       { top: '12%', left: '45%' },
       { top: '10%', right: '20%' },
       { top: '12%', right: '35%' },
@@ -147,7 +146,6 @@ const Home = () => {
       
       // Corner areas - more precise
       { top: '3%', left: '2%' },
-      { top: '3%', right: '2%' },
       { bottom: '3%', left: '2%' },
       { bottom: '3%', right: '2%' },
       
@@ -245,7 +243,7 @@ const Home = () => {
               transform: `translateY(${scrollY * 0.05}px)`
             }}
           >
-            Where brilliant minds connect, collaborate, and create the future together. 
+            Where inco brilliant minds connect, collaborate, and create the future together. 
           </p>
           <div 
             className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
