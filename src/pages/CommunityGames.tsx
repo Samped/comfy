@@ -251,20 +251,20 @@ const CommunityGames = () => {
 
         {/* Enhanced Stats Bar */}
         <div className="mt-20 text-center">
-          <div className="inline-flex items-center justify-center space-x-8 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl px-8 py-4 border border-gray-700/50">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
-              <span className="text-gray-300 font-semibold">{games.length} Games</span>
+          <div className="inline-flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-8 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-xl rounded-2xl px-4 sm:px-8 py-3 sm:py-4 border border-gray-700/50">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-400 rounded-full animate-pulse"></div>
+              <span className="text-gray-300 font-semibold text-sm sm:text-base">{games.length} Games</span>
             </div>
-            <div className="w-px h-6 bg-gray-600"></div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-              <span className="text-gray-300 font-semibold">Active Community</span>
+            <div className="hidden sm:block w-px h-6 bg-gray-600"></div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+              <span className="text-gray-300 font-semibold text-sm sm:text-base">Active Community</span>
             </div>
-            <div className="w-px h-6 bg-gray-600"></div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-pink-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-              <span className="text-gray-300 font-semibold">Always Growing</span>
+            <div className="hidden sm:block w-px h-6 bg-gray-600"></div>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-pink-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <span className="text-gray-300 font-semibold text-sm sm:text-base">Always Growing</span>
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ const Home = () => {
   const [currentText, setCurrentText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imageVisible, setImageVisible] = useState(true)
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
   
@@ -69,11 +70,19 @@ const Home = () => {
     }
   }, [currentRoleIndex])
 
-  // Image cycling effect
+  // Sleek Image cycling effect with fade transition
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % comfyImages.length)
-    }, 3000) // Change image every 3 seconds for slower cycling
+      // Start fade out
+      setImageVisible(false)
+      
+      // After fade out completes, change image and fade in
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % comfyImages.length)
+        setImageVisible(true)
+      }, 500) // Wait for fade out to complete
+      
+    }, 4000) // Change image every 4 seconds
 
     return () => clearInterval(interval)
   }, [])
@@ -82,8 +91,8 @@ const Home = () => {
   const getRandomPosition = (index: number) => {
     const positions = [
       // Top edge - more positions
-      { top: '5%', left: '5%' },
-      { top: '10%', left: '30%' },
+      { top: '15%', left: '15%' },
+      { top: '20%', left: '30%' },
       { top: '12%', left: '45%' },
       { top: '10%', right: '20%' },
       { top: '12%', right: '35%' },
@@ -91,7 +100,6 @@ const Home = () => {
       
       // Left edge - more positions
       { top: '20%', left: '3%' },
-
       { top: '40%', left: '8%' },
       { top: '50%', left: '3%' },
       { top: '70%', left: '4%' },
@@ -107,14 +115,13 @@ const Home = () => {
       { top: '85%', right: '7%' },
       
       // Bottom edge - more positions
-      { bottom: '5%', left: '8%' },
-      { bottom: '8%', left: '25%' },
-      { bottom: '10%', left: '40%' },
-      { bottom: '12%', left: '55%' },
-     
+      { bottom: '15%', left: '18%' },
+      { bottom: '82%', left: '25%' },
+      { bottom: '30%', left: '50%' },
+      { bottom: '32%', left: '55%' },
       { bottom: '10%', right: '25%' },
-      { bottom: '12%', right: '40%' },
-      { bottom: '15%', right: '55%' },
+      { bottom: '42%', right: '70%' },
+      { bottom: '25%', right: '25%' },
       
       // Corner areas - more precise
       { top: '3%', left: '2%' },
@@ -182,15 +189,20 @@ const Home = () => {
           <div className="absolute bottom-1/4 right-1/4 w-3 h-3 bg-secondary-300 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }}></div>
         </div>
 
-        {/* Animated Comfy Images - Random Positions */}
+        {/* Sleek Animated Comfy Images - Fade In/Out */}
         <div className="absolute inset-0 pointer-events-none">
           <img 
             src={`/comfy/${comfyImages[currentImageIndex]}`}
             alt={`Comfy ${comfyImages[currentImageIndex]}`}
-            className="absolute w-16 h-16 md:w-40 md:h-40 opacity-70 animate-float-slow transition-all duration-1000"
+            className={`absolute w-16 h-16 md:w-40 md:h-40 transition-all duration-500 ease-in-out ${
+              imageVisible 
+                ? 'opacity-70 scale-100 transform rotate-0' 
+                : 'opacity-0 scale-95 transform rotate-3'
+            }`}
             style={{ 
               ...getRandomPosition(currentImageIndex),
-              animation: 'float 6s ease-in-out infinite, randomMove 12s ease-in-out infinite'
+              animation: imageVisible ? 'float 6s ease-in-out infinite' : 'none',
+              filter: imageVisible ? 'drop-shadow(0 8px 16px rgba(0,0,0,0.3))' : 'none'
             }}
           />
         </div>
