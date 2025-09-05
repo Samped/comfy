@@ -37,7 +37,6 @@ const Home = () => {
     { label: 'Community Games', path: '/community-games', customIcon: 'explore/game.png' },
     { label: 'Comfy', path: '/comfy', customIcon: 'explore/art.png' },
     { label: 'InVideo', path: '/art/invideo', customIcon: 'explore/video.png' },
-    { label: 'Meme', path: '/art/meme', customIcon: null },
     { label: 'Inco Beats', path: '/incobeats', customIcon: 'explore/music.png' }
   ]
 
@@ -48,7 +47,7 @@ const Home = () => {
     setCurrentExploreIndex((prev) => (prev - 1 + exploreItems.length) % exploreItems.length)
     
     // Reset transition state after animation completes
-    setTimeout(() => setIsExploreTransitioning(false), 1200)
+    setTimeout(() => setIsExploreTransitioning(false), 1800)
     
     // Resume auto-rotation after 40 seconds
     setTimeout(() => setExplorePaused(false), 40000)
@@ -61,7 +60,7 @@ const Home = () => {
     setCurrentExploreIndex((prev) => (prev + 1) % exploreItems.length)
     
     // Reset transition state after animation completes
-    setTimeout(() => setIsExploreTransitioning(false), 1200)
+    setTimeout(() => setIsExploreTransitioning(false), 1800)
     
     // Resume auto-rotation after 40 seconds
     setTimeout(() => setExplorePaused(false), 40000)
@@ -379,17 +378,17 @@ const Home = () => {
               {(() => {
                 const item = getExploreAt(-1)
                 return (
-                  <div className={`absolute left-1/4 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
+                  <div className={`absolute left-1/4 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1500 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
                     <Link
                       to={item.path}
                       className="group block"
                     >
-                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1000 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:rotate-1">
+                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1500 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:rotate-1">
                         {item.customIcon && (
                           <img 
                             src={`/${item.customIcon}`} 
                             alt={item.label}
-                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1000 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1500 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                           />
                         )}
                       </div>
@@ -402,20 +401,20 @@ const Home = () => {
               {(() => {
                 const item = getExploreAt(0)
                 return (
-                  <div className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-105 rotate-2' : 'scale-100 rotate-0'}`}>
+                  <div className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1500 ease-out ${isExploreTransitioning ? 'scale-105 rotate-2' : 'scale-100 rotate-0'}`}>
                     <Link
                       to={item.path}
                       className="group block"
                     >
-                      <div className="w-64 h-64 md:w-80 md:h-80 rounded-3xl bg-gradient-to-br from-gray-800/70 to-gray-900/70 group-hover:bg-white border-4 border-gray-700/50 group-hover:border-white/80 backdrop-blur-lg flex items-center justify-center opacity-100 shadow-2xl hover:shadow-3xl transition-all duration-1000 ease-out transform hover:scale-125 hover:-rotate-1 relative overflow-hidden">
+                      <div className="w-64 h-64 md:w-80 md:h-80 rounded-3xl bg-gradient-to-br from-gray-800/70 to-gray-900/70 group-hover:bg-white border-4 border-gray-700/50 group-hover:border-white/80 backdrop-blur-lg flex items-center justify-center opacity-100 shadow-2xl hover:shadow-3xl transition-all duration-1500 ease-out transform hover:scale-125 hover:-rotate-1 relative overflow-hidden">
                         {/* Animated glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1500"></div>
                         
                         {item.customIcon && (
                           <img 
                             src={`/${item.customIcon}`} 
                             alt={item.label}
-                            className="w-64 h-64 md:w-80 md:h-80 object-contain transition-all duration-1000 ease-out relative z-10 drop-shadow-lg group-hover:scale-125 group-hover:drop-shadow-2xl"
+                            className="w-64 h-64 md:w-80 md:h-80 object-contain transition-all duration-1500 ease-out relative z-10 drop-shadow-lg group-hover:scale-125 group-hover:drop-shadow-2xl"
                           />
                         )}
                       </div>
@@ -428,17 +427,17 @@ const Home = () => {
               {(() => {
                 const item = getExploreAt(1)
                 return (
-                  <div className={`absolute right-1/4 translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
+                  <div className={`absolute right-1/4 translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1500 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
                     <Link
                       to={item.path}
                       className="group block"
                     >
-                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1000 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:-rotate-1">
+                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1500 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:-rotate-1">
                         {item.customIcon && (
                           <img 
                             src={`/${item.customIcon}`} 
                             alt={item.label}
-                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1000 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1500 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                           />
                         )}
                       </div>
@@ -451,14 +450,14 @@ const Home = () => {
               <button
                 aria-label="Previous"
                 onClick={showPrevExplore}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-700 shadow-lg hover:shadow-xl backdrop-blur-md"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-1000 shadow-lg hover:shadow-xl backdrop-blur-md"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 aria-label="Next"
                 onClick={showNextExplore}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-700 shadow-lg hover:shadow-xl backdrop-blur-md"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-1000 shadow-lg hover:shadow-xl backdrop-blur-md"
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -470,7 +469,7 @@ const Home = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentExploreIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-700 ${
+                  className={`w-3 h-3 rounded-full transition-all duration-1500 ${
                     index === currentExploreIndex
                       ? 'gradient-bg shadow-lg scale-125'
                       : 'bg-gray-600 hover:bg-gray-500'
