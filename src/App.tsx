@@ -7,7 +7,8 @@ import Comfy from './pages/Comfy'
 import ArtInVideo from './pages/ArtInVideo'
 import ArtMeme from './pages/ArtMeme'
 import ArtCommunityCanvases from './pages/ArtCommunityCanvases'
-import Footer from './components/Footer'
+import IncoBeats from './pages/IncoBeats'
+
 
 function App() {
   return (
@@ -22,9 +23,9 @@ function App() {
             <Route path="/art/invideo" element={<ArtInVideo />} />
             <Route path="/art/meme" element={<ArtMeme />} />
             <Route path="/art/community-canvases" element={<ArtCommunityCanvases />} />
+            <Route path="/incobeats" element={<IncoBeats />} />
           </Routes>
         </main>
-        <Footer />
       </div>
     </Router>
   )

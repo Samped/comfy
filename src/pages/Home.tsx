@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ChevronLeft, ChevronRight, Users, Lightbulb, Rocket, Star, Gamepad2, Palette, ImageIcon, Film, Music, Smile } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -10,12 +10,14 @@ const Home = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [imageVisible, setImageVisible] = useState(true)
   const [currentExploreIndex, setCurrentExploreIndex] = useState(0)
+  const [isExploreTransitioning, setIsExploreTransitioning] = useState(false)
+  const [explorePaused, setExplorePaused] = useState(false)
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
   
   const comfyImages = [
     'cm.webp',
-    'cmpng.webp', 
+    'Без_имени-4.webp', 
     'hey.webp',
     'skin_3.webp',
     'tyson.webp',
@@ -32,19 +34,37 @@ const Home = () => {
   ]
 
   const exploreItems = [
-    { label: 'Community Games', path: '/community-games', Icon: Gamepad2 },
-    { label: 'Comfy', path: '/comfy', Icon: ImageIcon },
-    { label: 'InVideo', path: '/art/invideo', Icon: Film },
-    { label: 'Meme', path: '/art/meme', Icon: Smile },
-    { label: 'Inco Beats', path: '/', Icon: Music }
+    { label: 'Community Games', path: '/community-games', customIcon: 'explore/game.png' },
+    { label: 'Comfy', path: '/comfy', customIcon: 'explore/art.png' },
+    { label: 'InVideo', path: '/art/invideo', customIcon: 'explore/video.png' },
+    { label: 'Meme', path: '/art/meme', customIcon: null },
+    { label: 'Inco Beats', path: '/incobeats', customIcon: 'explore/music.png' }
   ]
 
   const showPrevExplore = () => {
+    if (isExploreTransitioning) return
+    setIsExploreTransitioning(true)
+    setExplorePaused(true)
     setCurrentExploreIndex((prev) => (prev - 1 + exploreItems.length) % exploreItems.length)
+    
+    // Reset transition state after animation completes
+    setTimeout(() => setIsExploreTransitioning(false), 1200)
+    
+    // Resume auto-rotation after 40 seconds
+    setTimeout(() => setExplorePaused(false), 40000)
   }
 
   const showNextExplore = () => {
+    if (isExploreTransitioning) return
+    setIsExploreTransitioning(true)
+    setExplorePaused(true)
     setCurrentExploreIndex((prev) => (prev + 1) % exploreItems.length)
+    
+    // Reset transition state after animation completes
+    setTimeout(() => setIsExploreTransitioning(false), 1200)
+    
+    // Resume auto-rotation after 40 seconds
+    setTimeout(() => setExplorePaused(false), 40000)
   }
 
   const getExploreAt = (offset: number) => {
@@ -57,6 +77,21 @@ const Home = () => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Auto-rotation for explore carousel
+  useEffect(() => {
+    if (explorePaused) return
+    
+    const interval = setInterval(() => {
+      if (!isExploreTransitioning) {
+        setIsExploreTransitioning(true)
+        setCurrentExploreIndex((prev) => (prev + 1) % exploreItems.length)
+        setTimeout(() => setIsExploreTransitioning(false), 1200)
+      }
+    }, 5000) // Auto-rotate every 5 seconds
+    
+    return () => clearInterval(interval)
+  }, [explorePaused, isExploreTransitioning, exploreItems.length])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -105,6 +140,15 @@ const Home = () => {
       }, 500) // Wait for fade out to complete
       
     }, 4000) // Change image every 4 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Auto-advance explore carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentExploreIndex((prev) => (prev + 1) % exploreItems.length)
+    }, 3000) // Change every 3 seconds
 
     return () => clearInterval(interval)
   }, [])
@@ -214,7 +258,7 @@ const Home = () => {
           <img 
             src={`/comfy/${comfyImages[currentImageIndex]}`}
             alt={`Comfy ${comfyImages[currentImageIndex]}`}
-            className={`absolute w-16 h-16 md:w-40 md:h-40 transition-all duration-500 ease-in-out ${
+            className={`absolute w-16 h-16 md:w-40 md:h-40 transition-all duration-1000 ease-in-out ${
               imageVisible 
                 ? 'opacity-70 scale-100 transform rotate-0' 
                 : 'opacity-0 scale-95 transform rotate-3'
@@ -240,10 +284,19 @@ const Home = () => {
           <p 
             className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
             style={{ 
-              transform: `translateY(${scrollY * 0.05}px)`
-            }}
-          >
-            Where inco brilliant minds connect, collaborate, and create the future together. 
+            transform: `translateY(${scrollY * 0.05}px)`
+              }}
+            >
+             Where{" "}
+            <a
+              href="https://www.inco.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-400 hover:underline"
+            >
+              inco
+              </a>{" "}
+              brilliant minds connect, collaborate, and create the future together.
           </p>
           <div 
             className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
@@ -278,9 +331,15 @@ const Home = () => {
       </section>
 
       {/* Comfy's House Stats Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="p-6 rounded-3xl bg-white/3 backdrop-blur-md border border-white/10">
+      <section className="py-7 px-4 sm:px-6 lg:px-8 bg-transparent relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-purple-500/15 rounded-full blur-2xl"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="p-6 rounded-3xl bg-gray-900/50 backdrop-blur-md border border-gray-700/40 mb-12">
             <div className="text-center mb-6 mt-4">
               <h2 
                 className="text-2xl sm:text-3xl font-bold text-white mb-2"
@@ -289,7 +348,7 @@ const Home = () => {
                 }}
               >
                 Comfy's House
-            </h2>
+              </h2>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               {[
@@ -301,110 +360,132 @@ const Home = () => {
                 <Link 
                   key={index}
                   to={stat.path}
-                  className="block p-3 md:p-4 rounded-xl bg-white/3 backdrop-blur-md border border-white/10 hover:scale-105 transition-all duration-300 hover:border-primary-500/50 cursor-pointer"
+                  className="block p-3 md:p-4 rounded-xl bg-gray-800/40 backdrop-blur-md border border-gray-700/40 hover:scale-105 transition-all duration-1000 ease-in-out hover:border-gray-600/50 cursor-pointer"
                   style={{ 
                     transform: `translateY(${scrollY * 0.01}px)`
                   }}
                 >
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold gradient-text animate-gradient mb-1">{stat.number}</div>
-                  <div className="text-sm sm:text-base md:text-lg font-semibold gradient-text animate-gradient">{stat.label}</div>
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-1">{stat.number}</div>
+                  <div className="text-sm sm:text-base md:text-lg font-semibold text-white">{stat.label}</div>
                 </Link>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Circular Scrollable Tabs → Replaced with Carousel */}
-      <section className="py-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+          {/* Enhanced Icon Carousel */}
           <div className="relative">
-            {/* Explore Carousel (no header/subtext) */}
-            <div className="relative w-full max-w-4xl h-56 md:h-72 mx-auto flex items-center justify-center">
-              {/* Side previews */}
-              {[-1, 1].map((offset) => {
-                const item = getExploreAt(offset)
-                const isLeft = offset === -1
-                return (
-                  <Link
-                    key={offset}
-                    to={item.path}
-                    className={`absolute ${isLeft ? 'left-1/2 -translate-x-[70%]' : 'left-1/2 -translate-x-[30%]'} -translate-y-1/2 top-1/2 pointer-events-auto`}
-                  >
-                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/40 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-25 scale-75">
-                      <item.Icon className="w-8 h-8 md:w-10 md:h-10 text-primary-300 mb-2" />
-                      <span className="text-xs md:text-sm font-semibold text-gray-200 leading-tight">
-                        {item.label}
-                      </span>
-                    </div>
-                  </Link>
-                )
-              })}
-
-              {/* Main item */}
+            <div className="relative w-full max-w-6xl h-[350px] mx-auto flex items-center justify-center">
+              {/* Previous icon (left side) */}
               {(() => {
-                const item = getExploreAt(0)
+                const item = getExploreAt(-1)
                 return (
-                  <Link
-                    to={item.path}
-                    className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-auto"
-                  >
-                    <div className="w-40 h-40 md:w-60 md:h-60 rounded-full bg-gradient-to-br from-gray-800/70 to-gray-900/70 border border-gray-700/50 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-100 scale-100 shadow-2xl">
-                      <item.Icon className="w-16 h-16 md:w-24 md:h-24 text-primary-300 mb-3" />
-                      <span className="text-sm md:text-lg font-semibold text-gray-100 leading-tight">
-                        {item.label}
-                      </span>
-                    </div>
-                  </Link>
+                  <div className={`absolute left-1/4 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
+                    <Link
+                      to={item.path}
+                      className="group block"
+                    >
+                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1000 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:rotate-1">
+                        {item.customIcon && (
+                          <img 
+                            src={`/${item.customIcon}`} 
+                            alt={item.label}
+                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1000 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                          />
+                        )}
+                      </div>
+                    </Link>
+                  </div>
                 )
               })()}
 
-              {/* Arrows (faint) */}
+              {/* Main/Current icon (center) */}
+              {(() => {
+                const item = getExploreAt(0)
+                return (
+                  <div className={`absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-105 rotate-2' : 'scale-100 rotate-0'}`}>
+                    <Link
+                      to={item.path}
+                      className="group block"
+                    >
+                      <div className="w-64 h-64 md:w-80 md:h-80 rounded-3xl bg-gradient-to-br from-gray-800/70 to-gray-900/70 group-hover:bg-white border-4 border-gray-700/50 group-hover:border-white/80 backdrop-blur-lg flex items-center justify-center opacity-100 shadow-2xl hover:shadow-3xl transition-all duration-1000 ease-out transform hover:scale-125 hover:-rotate-1 relative overflow-hidden">
+                        {/* Animated glow effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                        
+                        {item.customIcon && (
+                          <img 
+                            src={`/${item.customIcon}`} 
+                            alt={item.label}
+                            className="w-64 h-64 md:w-80 md:h-80 object-contain transition-all duration-1000 ease-out relative z-10 drop-shadow-lg group-hover:scale-125 group-hover:drop-shadow-2xl"
+                          />
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+                )
+              })()}
+
+              {/* Next icon (right side) */}
+              {(() => {
+                const item = getExploreAt(1)
+                return (
+                  <div className={`absolute right-1/4 translate-x-1/2 -translate-y-1/2 top-1/2 transition-all duration-1000 ease-out ${isExploreTransitioning ? 'scale-95 opacity-30' : 'scale-100 opacity-40'}`}>
+                    <Link
+                      to={item.path}
+                      className="group block"
+                    >
+                      <div className="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-br from-gray-800/60 to-gray-900/60 border-2 border-gray-700/40 backdrop-blur-lg flex items-center justify-center hover:opacity-70 transition-all duration-1000 ease-out shadow-lg hover:shadow-2xl transform hover:scale-105 hover:-rotate-1">
+                        {item.customIcon && (
+                          <img 
+                            src={`/${item.customIcon}`} 
+                            alt={item.label}
+                            className="w-32 h-32 md:w-36 md:h-36 object-contain transition-all duration-1000 ease-out filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                          />
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+                )
+              })()}
+
+              {/* Enhanced Navigation arrows */}
               <button
                 aria-label="Previous"
                 onClick={showPrevExplore}
-                className="absolute left-1 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-700 shadow-lg hover:shadow-xl backdrop-blur-md"
               >
                 <ChevronLeft className="w-6 h-6" />
               </button>
               <button
                 aria-label="Next"
                 onClick={showNextExplore}
-                className="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-2xl bg-gray-900/40 border-2 border-gray-700/40 text-white hover:bg-gray-800/60 hover:border-gray-600/60 hover:text-white transition-all duration-700 shadow-lg hover:shadow-xl backdrop-blur-md"
               >
                 <ChevronRight className="w-6 h-6" />
               </button>
             </div>
-          </div>
-        </div>
-      </section>
- 
-      {/* Stats Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: "500+", label: "Members" },
-              { number: "50+", label: "Projects" },
-              { number: "25+", label: "Events" },
-              { number: "100%", label: "Awesome" }
-            ].map((stat, index) => (
-              <div 
-                key={index}
-                className="glass p-6 rounded-xl hover:scale-110 transition-transform duration-300"
-                style={{ 
-                  transform: `translateY(${scrollY * 0.01}px)`
-                }}
-              >
-                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{stat.number}</div>
-                <div className="text-gray-300">{stat.label}</div>
+            
+            {/* Progress indicators */}
+            <div className="flex justify-center mt-8 space-x-3">
+              {exploreItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentExploreIndex(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-700 ${
+                    index === currentExploreIndex
+                      ? 'gradient-bg shadow-lg scale-125'
+                      : 'bg-gray-600 hover:bg-gray-500'
+                  }`}
+                />
+              ))}
             </div>
-            ))}
           </div>
         </div>
-      </section>
-    </div>
-  )
-}
+              </section>
+
+
+ 
+      </div>
+    )
+  }
 
 export default Home

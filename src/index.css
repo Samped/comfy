@@ -38,6 +38,8 @@
     background-size: 200% 200%;
     animation: gradient 3s ease infinite;
   }
+
+
 }
 
 /* Fun Animations */
@@ -107,6 +109,8 @@
     transform: translateX(0);
   }
 }
+
+
 
 @keyframes slideInRight {
   from {

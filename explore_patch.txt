@@ -1,0 +1,72 @@
+            {/* Explore Carousel - 3 icons with center magnified */}
+            <div className="relative w-full max-w-5xl h-60 md:h-72 mx-auto flex items-center justify-center">
+              {/* Previous icon (faint) */}
+              {(() => {
+                const item = getExploreAt(-1)
+                return (
+                  <Link
+                    to={item.path}
+                    className="absolute left-1/2 -translate-x-[70%] -translate-y-1/2 top-1/2 pointer-events-auto"
+                  >
+                    <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/40 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-30 scale-75">
+                      <item.Icon className="w-10 h-10 md:w-12 md:h-12 text-primary-300 mb-2" />
+                      <span className="text-xs md:text-sm font-semibold text-gray-200 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })()}
+
+              {/* Main center icon (magnified) */}
+              {(() => {
+                const item = getExploreAt(0)
+                return (
+                  <Link
+                    to={item.path}
+                    className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 pointer-events-auto"
+                  >
+                    <div className="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-br from-gray-800/70 to-gray-900/70 border border-gray-700/50 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-100 scale-100 shadow-2xl">
+                      <item.Icon className="w-20 h-20 md:w-28 md:h-28 text-primary-300 mb-3" />
+                      <span className="text-base md:text-xl font-semibold text-gray-100 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })()}
+
+              {/* Next icon (faint) */}
+              {(() => {
+                const item = getExploreAt(1)
+                return (
+                  <Link
+                    to={item.path}
+                    className="absolute left-1/2 -translate-x-[30%] -translate-y-1/2 top-1/2 pointer-events-auto"
+                  >
+                    <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/40 backdrop-blur-sm flex flex-col items-center justify-center text-center transition-all duration-300 opacity-30 scale-75">
+                      <item.Icon className="w-10 h-10 md:w-12 md:h-12 text-primary-300 mb-2" />
+                      <span className="text-xs md:text-sm font-semibold text-gray-200 leading-tight">
+                        {item.label}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })()}
+
+              {/* Arrows (faint) */}
+              <button
+                aria-label="Previous"
+                onClick={showPrevExplore}
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button
+                aria-label="Next"
+                onClick={showNextExplore}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-gray-900/40 border border-gray-700/40 text-white opacity-30 hover:opacity-60 transition pointer-events-auto"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>

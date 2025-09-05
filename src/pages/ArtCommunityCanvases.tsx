@@ -5,33 +5,23 @@ const ArtCommunityCanvases = () => {
   // Load all images from public/community canvas as URLs (Vite)
   const canvasImages = useMemo(() => {
     const modules = import.meta.glob('/public/community canvas/*', { eager: true, as: 'url' }) as Record<string, string>
-    const items = Object.entries(modules).map(([path, url], index) => {
+    const items = Object.entries(modules).map(([path, url]) => {
       const name = path.split('/').pop() || 'canvas'
       // Remove file extension from display name
-      let displayName = name.replace(/\.(png|jpg|jpeg|gif|webp)$/i, '')
-      
-      // Set custom names for the first two canvases
-      if (index === 1) {
-        displayName = "inCreatives #1 (we broke excalidraw)"
-      } else if (index === 0) {
-        displayName = "InCreatives #2 (everything worked fine lol)"
-      }
-      
+      const displayName = name.replace(/\.(png|jpg|jpeg|gif|webp)$/i, '')
       return { name: displayName, url }
     })
     return items.sort((a, b) => a.name.localeCompare(b.name))
   }, [])
 
   return (
-    <div className="pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            <span className="gradient-text">Community</span> Canvases
+    <div className="pt-16 min-h-screen relative overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl sm:text-4xl font-bold">
+            <span className="gradient-text">Community Canvases</span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Shared canvases from our community.
-          </p>
+          <p className="text-gray-300-xl  max-w-3xl mx-auto">Shared canvases from our community.</p>
         </div>
 
         {canvasImages.length === 0 ? (
