@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 
 const ArtMeme = () => {
   // Load all images from public/meme as URLs (Vite)

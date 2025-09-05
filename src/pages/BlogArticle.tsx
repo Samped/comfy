@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Calendar, User, Eye, Share2 } from 'lucide-react'
 import { BlogArticle } from './Blog'
 import { formatText } from '../utils/textFormatter'
 
 const BlogArticleView = () => {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const [article, setArticle] = useState<BlogArticle | null>(null)
   const [relatedArticles, setRelatedArticles] = useState<BlogArticle[]>([])
   const [loading, setLoading] = useState(true)

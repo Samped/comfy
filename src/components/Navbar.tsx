@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Users, Gamepad2, Palette, Home, ChevronDown, BookOpen } from 'lucide-react'
+import { Menu, X, Gamepad2, Palette, Home, ChevronDown, BookOpen } from 'lucide-react'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,7 +21,7 @@ const Navbar = () => {
   ]
 
   const isActive = (path: string) => location.pathname === path
-  const isArtActive = (path: string) => location.pathname.startsWith('/art')
+  const isArtActive = () => location.pathname.startsWith('/art')
 
   return (
     <nav className="fixed top-0 w-full z-50 glass animate-fade-in">
@@ -72,7 +72,7 @@ const Navbar = () => {
               <button
                 onClick={() => setIsArtDropdownOpen(!isArtDropdownOpen)}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover-lift ${
-                  isArtActive('/art')
+                                      isArtActive()
                     ? 'text-primary-400 bg-primary-400/10'
                     : 'text-gray-300 hover:text-white hover:bg-white/10 hover-glow'
                 }`}

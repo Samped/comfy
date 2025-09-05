@@ -1,4 +1,4 @@
-import React from 'react'
+// React import not needed with new JSX transform
 import { Calendar, MapPin, Clock, Users, ExternalLink } from 'lucide-react'
 
 const Events = () => {

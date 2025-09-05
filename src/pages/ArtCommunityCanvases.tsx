@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 const ArtCommunityCanvases = () => {
   const [selectedImage, setSelectedImage] = useState<{ name: string; url: string } | null>(null)

@@ -1,5 +1,4 @@
-import React from 'react'
-import { Palette, Heart, Share2, Download, Eye, Star } from 'lucide-react'
+import { Heart, Share2, Download, Eye, Star } from 'lucide-react'
 
 const ArtDrawing = () => {
   const drawings = [

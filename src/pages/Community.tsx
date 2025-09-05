@@ -1,5 +1,4 @@
-import React from 'react'
-import { Users, MapPin, Briefcase, Star } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 
 const Community = () => {
   const members = [

@@ -1,4 +1,4 @@
-import React from 'react'
+import { JSX } from 'react'
 
 export const formatText = (text: string): JSX.Element => {
   // Split text by lines first to preserve line breaks
@@ -120,7 +120,12 @@ const processLine = (line: string): JSX.Element[] => {
   matches.sort((a, b) => a.start - b.start)
   
   // Remove overlapping matches (keep the first one)
-  const validMatches = []
+  const validMatches: Array<{
+    match: RegExpMatchArray
+    start: number
+    end: number
+    pattern: typeof patterns[0]
+  }> = []
   for (const match of matches) {
     if (!validMatches.some(vm => 
       (match.start >= vm.start && match.start < vm.end) ||
@@ -133,7 +138,7 @@ const processLine = (line: string): JSX.Element[] => {
   // Build the formatted elements
   let elementKey = 0
   
-  validMatches.forEach((matchInfo, index) => {
+  validMatches.forEach((matchInfo) => {
     // Add text before the match
     if (matchInfo.start > currentIndex) {
       const beforeText = line.slice(currentIndex, matchInfo.start)
