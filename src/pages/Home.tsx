@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Calendar, User, Eye } from 'lucide-react'
+
+interface BlogArticle {
+  id: string
+  title: string
+  body: string
+  image: string
+  author: string
+  date: string
+  views: number
+  category: string
+}
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -12,6 +23,7 @@ const Home = () => {
   const [currentExploreIndex, setCurrentExploreIndex] = useState(0)
   const [isExploreTransitioning, setIsExploreTransitioning] = useState(false)
   const [explorePaused, setExplorePaused] = useState(false)
+  const [blogArticles, setBlogArticles] = useState<BlogArticle[]>([])
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
   
@@ -75,6 +87,40 @@ const Home = () => {
     const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Load blog articles from localStorage
+  useEffect(() => {
+    const loadArticles = () => {
+      const savedArticles = localStorage.getItem('blogArticles')
+      if (savedArticles) {
+        const articles = JSON.parse(savedArticles)
+        setBlogArticles(articles.slice(0, 6)) // Show only first 6 articles
+      }
+    }
+
+    // Load articles initially
+    loadArticles()
+
+    // Listen for storage changes (when new articles are added)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'blogArticles') {
+        loadArticles()
+      }
+    }
+
+    // Listen for custom events (for same-tab updates)
+    const handleArticleUpdate = () => {
+      loadArticles()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('blogArticlesUpdated', handleArticleUpdate)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('blogArticlesUpdated', handleArticleUpdate)
+    }
   }, [])
 
   // Auto-rotation for explore carousel
@@ -481,176 +527,123 @@ const Home = () => {
         </div>
               </section>
 
-          {/* Articles Section */}
+          {/* Blog Articles Section */}
           <section className="py-20">
             <div className="max-w-full">
               <div className="text-center mb-16 px-4 sm:px-6 lg:px-8">
                 <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
                   Latest Articles
                 </h2>
-                <p className="text-gray-300 text-xl max-w-3xl mx-auto">
+                <p className="text-gray-300 text-xl max-w-3xl mx-auto mb-8">
                   Stay updated with the latest insights, tutorials, and community stories
                 </p>
+                <Link
+                  to="/blog"
+                  className="inline-flex items-center space-x-2 px-6 py-3 gradient-bg text-white rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  <span>View All Articles</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
               </div>
 
-              {/* Full screen horizontal scrolling container */}
+              {/* Blog Articles Preview */}
               <div className="relative overflow-hidden">
                 <div className="flex overflow-x-auto scrollbar-hide space-x-8 px-8 pb-6" style={{ scrollSnapType: 'x mandatory' }}>
-                  {/* Article 1 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                                          <div className="flex h-full">
-                        {/* Icon half */}
-                        <div className="w-1/2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                            <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
+                  {/* Dynamic Blog Articles */}
+                  {blogArticles.length > 0 ? (
+                    blogArticles.map((article) => (
+                      <Link
+                        key={article.id}
+                        to={`/blog/article/${article.id}`}
+                        className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
+                        style={{ width: '720px', scrollSnapAlign: 'start' }}
+                      >
+                        <div className="flex h-full">
+                          {/* Image half */}
+                          <div className="w-1/2 relative overflow-hidden">
+                            <img
+                              src={article.image}
+                              alt={article.title}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.src = '/comfy/comfy.webp'
+                              }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/60"></div>
+                            <div className="absolute top-4 left-4">
+                              <span className="px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                                {article.category}
+                              </span>
+                            </div>
+                          </div>
+                          {/* Content half */}
+                          <div className="w-1/2 p-6 flex flex-col justify-between">
+                            <div>
+                              <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
+                                {article.title}
+                              </h3>
+                              <p className="text-gray-400 text-sm line-clamp-4 mb-4">
+                                {article.body}
+                              </p>
+                            </div>
+                            <div className="space-y-3">
+                              {/* Meta info */}
+                              <div className="flex items-center gap-4 text-xs text-gray-500">
+                                <div className="flex items-center gap-1">
+                                  <User className="w-3 h-3" />
+                                  <span>{article.author}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Eye className="w-3 h-3" />
+                                  <span>{article.views}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <Calendar className="w-3 h-3" />
+                                <span>{new Date(article.date).toLocaleDateString()}</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        {/* Content half */}
-                        <div className="w-1/2 p-6 flex flex-col justify-center">
-                          <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm mb-3 w-fit">
-                            Tutorial
-                          </span>
-                          <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
-                            Getting Started with Comfy Verse
-                          </h3>
-                          <p className="text-gray-400 text-base line-clamp-3">
-                            Learn the basics of our community platform and how to get the most out of your experience
-                          </p>
+                      </Link>
+                    ))
+                  ) : (
+                    // Show default cards when no articles exist
+                    <>
+                      {/* Sample Article Card */}
+                      <Link
+                        to="/blog"
+                        className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
+                        style={{ width: '720px', scrollSnapAlign: 'start' }}
+                      >
+                        <div className="flex h-full">
+                          {/* Icon half */}
+                          <div className="w-1/2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                              </svg>
+                            </div>
+                          </div>
+                          {/* Content half */}
+                          <div className="w-1/2 p-6 flex flex-col justify-center">
+                            <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm mb-3 w-fit">
+                              Blog
+                            </span>
+                            <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
+                              Explore Our Articles
+                            </h3>
+                            <p className="text-gray-400 text-base line-clamp-3">
+                              Discover insightful articles, tutorials, and community stories from the Comfy Verse community.
+                            </p>
+                          </div>
                         </div>
-                    </div>
-                  </div>
-
-                  {/* Article 2 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                    <div className="flex h-full">
-                      {/* Icon half */}
-                      <div className="w-1/2 bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {/* Content half */}
-                      <div className="w-1/2 p-6 flex flex-col justify-center">
-                        <span className="inline-block px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm mb-3 w-fit">
-                          Guide
-                        </span>
-                        <h3 className="text-xl font-bold text-white group-hover:text-green-300 transition-colors mb-3 line-clamp-2">
-                          Creative Tips & Tricks
-                        </h3>
-                        <p className="text-gray-400 text-base line-clamp-3">
-                          Boost your creativity with expert techniques and professional insights
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Article 3 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                    <div className="flex h-full">
-                      {/* Icon half */}
-                      <div className="w-1/2 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {/* Content half */}
-                      <div className="w-1/2 p-6 flex flex-col justify-center">
-                        <span className="inline-block px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm mb-3 w-fit">
-                          Community
-                        </span>
-                        <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors mb-3 line-clamp-2">
-                          Community Highlights
-                        </h3>
-                        <p className="text-gray-400 text-base line-clamp-3">
-                          Celebrating our amazing community members and their incredible contributions
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Article 4 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                    <div className="flex h-full">
-                      {/* Icon half */}
-                      <div className="w-1/2 bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {/* Content half */}
-                      <div className="w-1/2 p-6 flex flex-col justify-center">
-                        <span className="inline-block px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm mb-3 w-fit">
-                          Updates
-                        </span>
-                        <h3 className="text-xl font-bold text-white group-hover:text-orange-300 transition-colors mb-3 line-clamp-2">
-                          Platform Updates
-                        </h3>
-                        <p className="text-gray-400 text-base line-clamp-3">
-                          Latest features and improvements to enhance your experience on our platform
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Article 5 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                    <div className="flex h-full">
-                      {/* Icon half */}
-                      <div className="w-1/2 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {/* Content half */}
-                      <div className="w-1/2 p-6 flex flex-col justify-center">
-                        <span className="inline-block px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm mb-3 w-fit">
-                          Tech
-                        </span>
-                        <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors mb-3 line-clamp-2">
-                          Tech Deep Dives
-                        </h3>
-                        <p className="text-gray-400 text-base line-clamp-3">
-                          Exploring the cutting-edge technology and architecture behind our platform
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Article 6 */}
-                  <div className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl" style={{ width: '720px', scrollSnapAlign: 'start' }}>
-                    <div className="flex h-full">
-                      {/* Icon half */}
-                      <div className="w-1/2 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-                        <div className="w-24 h-24 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {/* Content half */}
-                      <div className="w-1/2 p-6 flex flex-col justify-center">
-                        <span className="inline-block px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm mb-3 w-fit">
-                          Events
-                        </span>
-                        <h3 className="text-xl font-bold text-white group-hover:text-yellow-300 transition-colors mb-3 line-clamp-2">
-                          Upcoming Events
-                        </h3>
-                        <p className="text-gray-400 text-base line-clamp-3">
-                          Don't miss out on exciting community events, workshops, and networking opportunities
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

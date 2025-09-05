@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Users, Gamepad2, Palette, Home, ChevronDown } from 'lucide-react'
+import { Menu, X, Users, Gamepad2, Palette, Home, ChevronDown, BookOpen } from 'lucide-react'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -11,6 +11,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home, customIcon: null },
     { path: '/community-games', label: 'Community Games', icon: Gamepad2, customIcon: null },
     { path: '/comfy', label: 'Comfy', icon: null, customIcon: 'cloud__1_.webp' },
+    { path: '/blog', label: 'Blog', icon: BookOpen, customIcon: null },
   ]
 
   const artDropdownItems = [

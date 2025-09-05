@@ -8,6 +8,8 @@ import ArtInVideo from './pages/ArtInVideo'
 import ArtMeme from './pages/ArtMeme'
 import ArtCommunityCanvases from './pages/ArtCommunityCanvases'
 import IncoBeats from './pages/IncoBeats'
+import Blog from './pages/Blog'
+import BlogArticleView from './pages/BlogArticle'
 
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route path="/art/meme" element={<ArtMeme />} />
             <Route path="/art/community-canvases" element={<ArtCommunityCanvases />} />
             <Route path="/incobeats" element={<IncoBeats />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/article/:id" element={<BlogArticleView />} />
           </Routes>
         </main>
       </div>
