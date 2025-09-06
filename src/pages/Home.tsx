@@ -403,7 +403,7 @@ const Home = () => {
               {[
                 { number: "15+", label: "Community Games", path: "/community-games" },
                 { number: "25+", label: "Comfy Art", path: "/comfy" },
-                { number: "40+", label: "Art Pieces", path: "/comfy" },
+                { number: "40+", label: "Articles", path: "/blog" },
                 { number: "12+", label: "Videos", path: "/art/invideo" }
               ].map((stat, index) => (
                 <Link 
