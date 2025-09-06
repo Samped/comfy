@@ -34,7 +34,7 @@ const Navbar = () => {
               alt="Comfy Verse Logo" 
               className="w-12 h-12 object-cover transition-all duration-300 group-hover:scale-110 group-hover:rotate-3" 
             />
-            <span className="text-xl font-bold gradient-text group-hover:animate-wiggle transition-all duration-300">
+            <span className="text-xl font-bold text-white group-hover:animate-wiggle transition-all duration-300">
               Comfy Verse
             </span>
           </Link>
@@ -49,8 +49,8 @@ const Navbar = () => {
                   to={item.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover-lift ${
                     isActive(item.path)
-                      ? 'text-primary-400 bg-primary-400/10'
-                      : 'text-gray-300 hover:text-white hover:bg-white/5'
+                      ? 'text-white bg-primary-400/10'
+                      : 'text-white hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {item.customIcon ? (
@@ -73,8 +73,8 @@ const Navbar = () => {
                 onClick={() => setIsArtDropdownOpen(!isArtDropdownOpen)}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:scale-105 hover-lift ${
                                       isArtActive()
-                    ? 'text-primary-400 bg-primary-400/10'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10 hover-glow'
+                    ? 'text-white bg-primary-400/10'
+                    : 'text-white hover:text-white hover:bg-white/10 hover-glow'
                 }`}
               >
                 <Palette className="w-4 h-4" />
@@ -93,8 +93,8 @@ const Navbar = () => {
                         onClick={() => setIsArtDropdownOpen(false)}
                         className={`block px-4 py-2 text-sm transition-colors duration-200 ${
                           isActive(item.path)
-                            ? 'text-primary-400 bg-primary-400/10'
-                            : 'text-gray-300 hover:text-white hover:bg-white/10'
+                            ? 'text-white bg-primary-400/10'
+                            : 'text-white hover:text-white hover:bg-white/10'
                         }`}
                       >
                         {item.label}
@@ -110,7 +110,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-300 hover:text-white p-2 transition-all duration-300 hover:scale-110 hover:rotate-12"
+              className="text-white hover:text-white p-2 transition-all duration-300 hover:scale-110 hover:rotate-12"
             >
               {isOpen ? (
                 <X className="w-6 h-6 animate-fade-in" />
@@ -134,8 +134,8 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:scale-105 hover-lift ${
                       isActive(item.path)
-                        ? 'text-primary-400 bg-primary-400/10 animate-pulse-glow'
-                        : 'text-gray-300 hover:text-white hover:bg-white/10 hover-glow'
+                        ? 'text-white bg-primary-400/10 animate-pulse-glow'
+                        : 'text-white hover:text-white hover:bg-white/10 hover-glow'
                     }`}
                     style={{ 
                       animation: `slideInLeft 0.3s ease-out ${index * 0.1}s both` 
@@ -157,7 +157,7 @@ const Navbar = () => {
               
               {/* Mobile Art Section */}
               <div className="px-3 py-2">
-                <div className="text-gray-400 text-sm font-medium mb-2">Art</div>
+                <div className="text-white text-sm font-medium mb-2">Art</div>
                 {artDropdownItems.map((item, index) => (
                   <Link
                     key={item.path}
@@ -165,8 +165,8 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`block px-6 py-2 text-sm transition-colors duration-200 ${
                       isActive(item.path)
-                        ? 'text-primary-400 bg-primary-400/10 rounded'
-                        : 'text-gray-300 hover:text-white hover:bg-white/10 rounded'
+                        ? 'text-white bg-primary-400/10 rounded'
+                        : 'text-white hover:text-white hover:bg-white/10 rounded'
                     }`}
                     style={{ 
                       animation: `slideInLeft 0.3s ease-out ${(index + 3) * 0.1}s both` 

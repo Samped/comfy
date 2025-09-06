@@ -271,7 +271,7 @@ const Home = () => {
   }
 
   return (
-    <div className="pt-16">
+    <div className="pt-16" style={{ backgroundColor: '#3673F5', minHeight: '100vh' }}>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Background Elements */}
@@ -323,37 +323,41 @@ const Home = () => {
               transform: `translateY(${scrollY * 0.1}px)`
             }}
           >
-            <span className="gradient-text animate-gradient">Comfy Verse</span>
-            <span className="text-white"> Community Page</span>
+            <span style={{ color: '#FFFFFF' }}>Comfy Verse</span>
+            <span style={{ color: '#FFFFFF' }}> Community Page</span>
           </h1>
-          <p 
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+                    <p 
+            className="text-2xl sm:text-3xl lg:text-4xl mb-6 max-w-4xl mx-auto leading-relaxed"
             style={{ 
-            transform: `translateY(${scrollY * 0.05}px)`
-              }}
+              color: '#E7EEFE',
+              transform: `translateY(${scrollY * 0.05}px)`
+            }}
             >
              Where{" "}
             <a
               href="https://www.inco.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary-400 hover:underline"
+              style={{ color: '#FFFFFF' }}
+              className="hover:underline"
             >
               inco
               </a>{" "}
               brilliant minds connect, collaborate, and create the future together.
           </p>
           <div 
-            className="text-2xl sm:text-3xl lg:text-4xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed"
+            className="text-2xl sm:text-3xl lg:text-4xl mb-10 max-w-4xl mx-auto leading-relaxed"
             style={{ 
+              color: '#E7EEFE',
               transform: `translateY(${scrollY * 0.05}px)`
             }}
           >
-            <span className="text-2xl sm:text-3xl lg:text-4xl font-bold">A hub for </span>
+            <span className="text-2xl sm:text-3xl lg:text-4xl font-bold" style={{ color: '#FFFFFF' }}>A hub for </span>
             <span 
               key={currentRoleIndex}
-              className="gradient-text typing-text"
+              className="typing-text"
               style={{ 
+                color: '#FFFFFF',
                 display: 'inline-block',
                 lineHeight: '1',
                 verticalAlign: 'middle',
@@ -369,9 +373,9 @@ const Home = () => {
 
         {/* Enhanced Floating Elements */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-4">
-          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-3 h-3 gradient-bg rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
         </div>
       </section>
 
@@ -517,7 +521,7 @@ const Home = () => {
                   onClick={() => setCurrentExploreIndex(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-1500 ${
                     index === currentExploreIndex
-                      ? 'gradient-bg shadow-lg scale-125'
+                      ? 'bg-white shadow-lg scale-125'
                       : 'bg-gray-600 hover:bg-gray-500'
                   }`}
                 />
@@ -531,15 +535,25 @@ const Home = () => {
           <section className="py-20">
             <div className="max-w-full">
               <div className="text-center mb-16 px-4 sm:px-6 lg:px-8">
-                <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+                <h2 className="text-4xl sm:text-5xl font-bold mb-6" style={{ color: '#FFFFFF' }}>
                   Latest Articles
                 </h2>
-                <p className="text-gray-300 text-xl max-w-3xl mx-auto mb-8">
+                <p className="text-xl max-w-3xl mx-auto mb-8" style={{ color: '#E7EEFE' }}>
                   Stay updated with the latest insights, tutorials, and community stories
                 </p>
                 <Link
                   to="/blog"
-                  className="inline-flex items-center space-x-2 px-6 py-3 gradient-bg text-white rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  style={{ 
+                    backgroundColor: '#17D45C', 
+                    color: '#FFFFFF' 
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#7FE8A6'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#17D45C'
+                  }}
                 >
                   <span>View All Articles</span>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -585,13 +599,13 @@ const Home = () => {
                               <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
                                 {article.title}
                               </h3>
-                              <p className="text-gray-400 text-sm line-clamp-4 mb-4">
+                              <p className="text-white text-sm line-clamp-4 mb-4">
                                 {article.body}
                               </p>
                             </div>
                             <div className="space-y-3">
                               {/* Meta info */}
-                              <div className="flex items-center gap-4 text-xs text-gray-500">
+                              <div className="flex items-center gap-4 text-xs text-white">
                                 <div className="flex items-center gap-1">
                                   <User className="w-3 h-3" />
                                   <span>{article.author}</span>
@@ -601,7 +615,7 @@ const Home = () => {
                                   <span>{article.views}</span>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <div className="flex items-center gap-1 text-xs text-white">
                                 <Calendar className="w-3 h-3" />
                                 <span>{new Date(article.date).toLocaleDateString()}</span>
                               </div>
@@ -636,7 +650,7 @@ const Home = () => {
                             <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
                               Explore Our Articles
                             </h3>
-                            <p className="text-gray-400 text-base line-clamp-3">
+                            <p className="text-white text-base line-clamp-3">
                               Discover insightful articles, tutorials, and community stories from the Comfy Verse community.
                             </p>
                           </div>
