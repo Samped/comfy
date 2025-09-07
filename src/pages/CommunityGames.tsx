@@ -125,7 +125,7 @@ const CommunityGames = () => {
   ]
 
   return (
-    <div className="pt-16 min-h-screen bg-gradient-to-br from-gray-900 via-blue-900/10 to-purple-900/20 relative overflow-hidden">
+    <div className="pt-16 min-h-screen relative overflow-hidden" style={{ backgroundColor: '#1B3E86' }}>
       {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
         <div 

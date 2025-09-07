@@ -3,7 +3,7 @@ import { Video, Clock } from 'lucide-react'
 
 const ArtInVideo = () => {
   return (
-    <div className="pt-16 min-h-screen" style={{ backgroundColor: '#0f172a' }}>
+    <div className="pt-16 min-h-screen" style={{ backgroundColor: '#1B3E86' }}>
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Elements */}
