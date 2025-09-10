@@ -11,8 +11,10 @@ import IncoBeats from './pages/IncoBeats'
 import Blog from './pages/Blog'
 import BlogArticleView from './pages/BlogArticle'
 import Admin from './pages/Admin'
+import AdminLogin from './pages/AdminLogin'
 import CreateBlog from './pages/CreateBlog'
 import EditBlog from './pages/EditBlog'
+import RequireAdmin from './components/RequireAdmin'
 
 
 function App() {
@@ -31,9 +33,10 @@ function App() {
             <Route path="/incobeats" element={<IncoBeats />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/article/:id" element={<BlogArticleView />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/create" element={<CreateBlog />} />
-            <Route path="/admin/edit/:id" element={<EditBlog />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
+            <Route path="/admin/create" element={<RequireAdmin><CreateBlog /></RequireAdmin>} />
+            <Route path="/admin/edit/:id" element={<RequireAdmin><EditBlog /></RequireAdmin>} />
           </Routes>
         </main>
       </div>

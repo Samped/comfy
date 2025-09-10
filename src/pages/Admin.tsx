@@ -50,7 +50,8 @@ const Admin = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this article?')) return
-    const res = await fetch(`/api/articles/${id}`, { method: 'DELETE' })
+    const token = localStorage.getItem('adminToken') || ''
+    const res = await fetch(`/api/articles/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
     if (res.ok) {
       setArticles((prev) => prev.filter((a) => a._id !== id))
     }

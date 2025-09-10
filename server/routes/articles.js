@@ -1,10 +1,11 @@
 const express = require('express')
 const Article = require('../models/Article')
+const { requireAdmin } = require('../middleware/auth')
 
 const router = express.Router()
 
 // Create article
-router.post('/', async (req, res) => {
+router.post('/', requireAdmin, async (req, res) => {
   try {
     const article = await Article.create(req.body)
     res.status(201).json(article)
@@ -51,7 +52,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Update article
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAdmin, async (req, res) => {
   try {
     const article = await Article.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
     if (!article) return res.status(404).json({ error: 'Not found' })
@@ -62,7 +63,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // Delete article
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const article = await Article.findByIdAndDelete(req.params.id)
     if (!article) return res.status(404).json({ error: 'Not found' })

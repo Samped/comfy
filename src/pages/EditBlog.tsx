@@ -113,9 +113,10 @@ const EditBlog = () => {
     setIsSubmitting(true)
 
     try {
+      const token = localStorage.getItem('adminToken') || ''
       const res = await fetch(`/api/articles/${originalArticle.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           title: formData.title.trim(),
           body: formData.body.trim(),

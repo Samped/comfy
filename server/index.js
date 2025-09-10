@@ -5,6 +5,7 @@ const morgan = require('morgan')
 require('dotenv').config()
 
 const articlesRouter = require('./routes/articles')
+const authRouter = require('./routes/auth')
 
 const app = express()
 
@@ -32,6 +33,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
+app.use('/api/auth', authRouter)
 app.use('/api/articles', articlesRouter)
 
 const port = process.env.PORT || 5000
