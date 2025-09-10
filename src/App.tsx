@@ -10,6 +10,9 @@ import ArtCommunityCanvases from './pages/ArtCommunityCanvases'
 import IncoBeats from './pages/IncoBeats'
 import Blog from './pages/Blog'
 import BlogArticleView from './pages/BlogArticle'
+import Admin from './pages/Admin'
+import CreateBlog from './pages/CreateBlog'
+import EditBlog from './pages/EditBlog'
 
 
 function App() {
@@ -28,6 +31,9 @@ function App() {
             <Route path="/incobeats" element={<IncoBeats />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/article/:id" element={<BlogArticleView />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/create" element={<CreateBlog />} />
+            <Route path="/admin/edit/:id" element={<EditBlog />} />
           </Routes>
         </main>
       </div>

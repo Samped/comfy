@@ -74,32 +74,19 @@ const CreateBlog = () => {
     setIsSubmitting(true)
 
     try {
-      // Create new article
-      const newArticle: BlogArticle = {
-        id: Date.now().toString(),
-        title: formData.title.trim(),
-        body: formData.body.trim(),
-        image: formData.image || '/comfy/comfy.webp',
-        author: formData.author.trim(),
-        date: new Date().toISOString(),
-        views: 0,
-        category: formData.category
-      }
-
-      // Get existing articles from localStorage
-      const existingArticles = JSON.parse(localStorage.getItem('blogArticles') || '[]')
-      
-      // Add new article to the beginning of the array
-      const updatedArticles = [newArticle, ...existingArticles]
-      
-      // Save to localStorage
-      localStorage.setItem('blogArticles', JSON.stringify(updatedArticles))
-      
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new Event('blogArticlesUpdated'))
-      
-      // Navigate back to blog page
-      navigate('/blog')
+      const res = await fetch('/api/articles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title.trim(),
+          body: formData.body.trim(),
+          image: formData.image || '/comfy/comfy.webp',
+          author: formData.author.trim(),
+          category: formData.category
+        })
+      })
+      if (!res.ok) throw new Error('Failed to create')
+      navigate('/admin')
     } catch (error) {
       console.error('Error creating article:', error)
       alert('Failed to create article. Please try again.')

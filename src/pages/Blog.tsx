@@ -18,12 +18,29 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
 
-  // Load articles from localStorage on component mount
+  // Load articles from API on component mount
   useEffect(() => {
-    const savedArticles = localStorage.getItem('blogArticles')
-    if (savedArticles) {
-      setArticles(JSON.parse(savedArticles))
+    const load = async () => {
+      try {
+        const res = await fetch('/api/articles')
+        if (!res.ok) return
+        const data = await res.json()
+        const mapped = data.map((a: any) => ({
+          id: a._id,
+          title: a.title,
+          body: a.body,
+          image: a.image,
+          author: a.author,
+          date: a.date || a.createdAt,
+          views: a.views,
+          category: a.category
+        }))
+        setArticles(mapped)
+      } catch (e) {
+        // ignore
+      }
     }
+    load()
   }, [])
 
   // Filter articles based on search and category
@@ -39,12 +56,9 @@ const Blog = () => {
 
 
 
-  const incrementViews = (id: string) => {
-    const updatedArticles = articles.map(article =>
-      article.id === id ? { ...article, views: article.views + 1 } : article
-    )
-    setArticles(updatedArticles)
-    localStorage.setItem('blogArticles', JSON.stringify(updatedArticles))
+  const incrementViews = async (id: string) => {
+    // optimistically update local state; server will persist when article view page requests with increment=true
+    setArticles((prev) => prev.map((a) => a.id === id ? { ...a, views: a.views + 1 } : a))
   }
 
   return (

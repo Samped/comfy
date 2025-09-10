@@ -11,22 +11,48 @@ const BlogArticleView = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!id) return
+    const load = async () => {
+      if (!id) return
+      try {
+        const res = await fetch(`/api/articles/${id}?increment=true`)
+        if (!res.ok) throw new Error('not found')
+        const a = await res.json()
+        const mapped: BlogArticle = {
+          id: a._id,
+          title: a.title,
+          body: a.body,
+          image: a.image,
+          author: a.author,
+          date: a.date || a.createdAt,
+          views: a.views,
+          category: a.category
+        }
+        setArticle(mapped)
 
-    const savedArticles = JSON.parse(localStorage.getItem('blogArticles') || '[]')
-    const foundArticle = savedArticles.find((article: BlogArticle) => article.id === id)
-    
-    if (foundArticle) {
-      setArticle(foundArticle)
-      
-      // Get related articles (same category, excluding current)
-      const related = savedArticles
-        .filter((a: BlogArticle) => a.category === foundArticle.category && a.id !== id)
-        .slice(0, 3)
-      setRelatedArticles(related)
+        const relRes = await fetch(`/api/articles?category=${encodeURIComponent(mapped.category)}`)
+        if (relRes.ok) {
+          const rel = await relRes.json()
+          setRelatedArticles(rel
+            .filter((ra: any) => ra._id !== id)
+            .slice(0, 3)
+            .map((ra: any) => ({
+              id: ra._id,
+              title: ra.title,
+              body: ra.body,
+              image: ra.image,
+              author: ra.author,
+              date: ra.date || ra.createdAt,
+              views: ra.views,
+              category: ra.category
+            })))
+        }
+      } catch (e) {
+        // ignore
+      } finally {
+        setLoading(false)
+      }
     }
-    
-    setLoading(false)
+    load()
   }, [id])
 
 

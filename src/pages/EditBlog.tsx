@@ -34,29 +34,37 @@ const EditBlog = () => {
   ]
 
   useEffect(() => {
-    if (!id) {
-      navigate('/blog')
-      return
+    const fetchArticle = async () => {
+      if (!id) { navigate('/admin'); return }
+      try {
+        const res = await fetch(`/api/articles/${id}`)
+        if (!res.ok) throw new Error('Not found')
+        const article = await res.json()
+        setOriginalArticle({
+          id: article._id,
+          title: article.title,
+          body: article.body,
+          image: article.image,
+          author: article.author,
+          date: article.date,
+          views: article.views,
+          category: article.category
+        })
+        setFormData({
+          title: article.title,
+          body: article.body,
+          image: article.image,
+          author: article.author,
+          category: article.category
+        })
+        setImagePreview(article.image)
+      } catch {
+        navigate('/admin')
+      } finally {
+        setLoading(false)
+      }
     }
-
-    const savedArticles = JSON.parse(localStorage.getItem('blogArticles') || '[]')
-    const article = savedArticles.find((article: BlogArticle) => article.id === id)
-    
-    if (article) {
-      setOriginalArticle(article)
-      setFormData({
-        title: article.title,
-        body: article.body,
-        image: article.image,
-        author: article.author,
-        category: article.category
-      })
-      setImagePreview(article.image)
-    } else {
-      navigate('/blog')
-    }
-    
-    setLoading(false)
+    fetchArticle()
   }, [id, navigate])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -105,32 +113,19 @@ const EditBlog = () => {
     setIsSubmitting(true)
 
     try {
-      // Update article
-      const updatedArticle: BlogArticle = {
-        ...originalArticle,
-        title: formData.title.trim(),
-        body: formData.body.trim(),
-        image: formData.image || '/comfy/comfy.webp',
-        author: formData.author.trim(),
-        category: formData.category
-      }
-
-      // Get existing articles from localStorage
-      const existingArticles = JSON.parse(localStorage.getItem('blogArticles') || '[]')
-      
-      // Update the article
-      const updatedArticles = existingArticles.map((article: BlogArticle) =>
-        article.id === originalArticle.id ? updatedArticle : article
-      )
-      
-      // Save to localStorage
-      localStorage.setItem('blogArticles', JSON.stringify(updatedArticles))
-      
-      // Dispatch custom event to notify other components
-      window.dispatchEvent(new Event('blogArticlesUpdated'))
-      
-      // Navigate to the article view
-      navigate(`/blog/article/${originalArticle.id}`)
+      const res = await fetch(`/api/articles/${originalArticle.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title.trim(),
+          body: formData.body.trim(),
+          image: formData.image || '/comfy/comfy.webp',
+          author: formData.author.trim(),
+          category: formData.category
+        })
+      })
+      if (!res.ok) throw new Error('Failed to update')
+      navigate(`/admin`)
     } catch (error) {
       console.error('Error updating article:', error)
       alert('Failed to update article. Please try again.')
