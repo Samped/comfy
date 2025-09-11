@@ -5,7 +5,7 @@ const router = express.Router()
 
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || ''
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || ''
-const JWT_SECRET = process.env.JWT_SECRET || 'change_me_secret'
+const JWT_SECRET = process.env.JWT_SECRET 
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body
