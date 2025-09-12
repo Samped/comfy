@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, User, Eye } from 'lucide-react'
-import HomeArticles from "./HomeArticles"
 
 interface BlogArticle {
   id: string
