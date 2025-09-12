@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Plus, Edit, Trash2, RefreshCw } from 'lucide-react'
+const API_BASE = import.meta.env.VITE_API_BASE
 
 export interface ArticleApiModel {
   _id: string
@@ -27,7 +28,8 @@ const Admin = () => {
       const params = new URLSearchParams()
       if (q) params.set('q', q)
       if (category && category !== 'all') params.set('category', category)
-      const res = await fetch(`/api/articles?${params.toString()}`)
+  
+      const res = await fetch(`${API_BASE}/api/articles?${params.toString()}`)
       if (!res.ok) throw new Error('Failed to load')
       const data = await res.json()
       setArticles(data)
@@ -37,7 +39,6 @@ const Admin = () => {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     const token = localStorage.getItem('adminToken')
     if (!token) {
@@ -58,7 +59,7 @@ const Admin = () => {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this article?')) return
     const token = localStorage.getItem('adminToken') || ''
-    const res = await fetch(`/api/articles/${id}`, {
+    const res = await fetch(`${API_BASE}/api/articles/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

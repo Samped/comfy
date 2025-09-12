@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Upload, Save, Eye } from 'lucide-react'
 import { BlogArticle } from './Blog'
 import { formatText } from '../utils/textFormatter'
+const API_BASE = import.meta.env.VITE_API_BASE
 
 const EditBlog = () => {
   const { id } = useParams<{ id: string }>()
@@ -23,21 +24,19 @@ const EditBlog = () => {
 
   const categories = [
     'general',
-    'tutorial',
+    'educational',
     'guide',
     'community',
     'updates',
     'tech',
     'events',
-    'art',
-    'gaming'
   ]
 
   useEffect(() => {
     const fetchArticle = async () => {
       if (!id) { navigate('/admin'); return }
       try {
-        const res = await fetch(`/api/articles/${id}`)
+        const res = await fetch(`${API_BASE}/api/articles/${id}`)
         if (!res.ok) throw new Error('Not found')
         const article = await res.json()
         setOriginalArticle({
@@ -59,7 +58,7 @@ const EditBlog = () => {
         })
         setImagePreview(article.image)
       } catch {
-        navigate('/admin')
+        navigate(`${API_BASE}/admin`)
       } finally {
         setLoading(false)
       }
@@ -114,7 +113,7 @@ const EditBlog = () => {
 
     try {
       const token = localStorage.getItem('adminToken') || ''
-      const res = await fetch(`/api/articles/${originalArticle.id}`, {
+      const res = await fetch(`${API_BASE}/api/articles/${originalArticle.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -126,7 +125,7 @@ const EditBlog = () => {
         })
       })
       if (!res.ok) throw new Error('Failed to update')
-      navigate(`/admin`)
+      navigate(`${API_BASE}/admin`)
     } catch (error) {
       console.error('Error updating article:', error)
       alert('Failed to update article. Please try again.')

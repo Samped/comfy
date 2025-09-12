@@ -5,6 +5,7 @@ import { BlogArticle } from './Blog'
 import ReactMarkdown from 'react-markdown'
 import { formatText } from '../utils/textFormatter'
 import remarkGfm from 'remark-gfm'
+const API_BASE = import.meta.env.VITE_API_BASE
 
 const CreateBlog = () => {
   const navigate = useNavigate()
@@ -81,7 +82,7 @@ const CreateBlog = () => {
     setIsSubmitting(true)
   
     try {
-      const res = await fetch('/api/articles', {
+      const res = await fetch(`${API_BASE}/api/articles`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,13 +101,13 @@ const CreateBlog = () => {
         if (res.status === 401) {
           alert('Unauthorized. Please log in again.')
           localStorage.removeItem('adminToken') // Clear old/invalid token
-          navigate('/admin-login') // redirect to login page
+          navigate(`${API_BASE}/admin-login`) // redirect to login page
           return
         }
         throw new Error('Failed to create article')
       }
   
-      navigate('/admin')
+      navigate(`${API_BASE}/admin`)
     } catch (error) {
       console.error('Error creating article:', error)
       alert('Failed to create article. Please try again.')

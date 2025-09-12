@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Calendar, User, Eye, Share2 } from 'lucide-react'
 import { BlogArticle } from './Blog'
 import { formatText } from '../utils/textFormatter'
+const API_BASE = import.meta.env.VITE_API_BASE
 
 const BlogArticleView = () => {
   const { id } = useParams<{ id: string }>()
@@ -14,7 +15,7 @@ const BlogArticleView = () => {
     const load = async () => {
       if (!id) return
       try {
-        const res = await fetch(`/api/articles/${id}?increment=true`)
+        const res = await fetch(`${API_BASE}/api/articles/${id}?increment=true`)
         if (!res.ok) throw new Error('not found')
         const a = await res.json()
         const mapped: BlogArticle = {
@@ -29,7 +30,7 @@ const BlogArticleView = () => {
         }
         setArticle(mapped)
 
-        const relRes = await fetch(`/api/articles?category=${encodeURIComponent(mapped.category)}`)
+        const relRes = await fetch(`${API_BASE}/api/articles?category=${encodeURIComponent(mapped.category)}`)
         if (relRes.ok) {
           const rel = await relRes.json()
           setRelatedArticles(rel
