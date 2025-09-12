@@ -11,8 +11,7 @@ const Navbar = () => {
     { path: '/', label: 'Home', icon: Home, customIcon: null },
     { path: '/community-games', label: 'Community Games', icon: Gamepad2, customIcon: null },
     { path: '/comfy', label: 'Comfy', icon: null, customIcon: 'cloud__1_.webp' },
-    { path: '/blog', label: 'Blog', icon: BookOpen, customIcon: null },
-    { path: '/admin', label: 'Admin', icon: BookOpen, customIcon: null },
+    { path: '/blog', label: 'Blog', icon: BookOpen, customIcon: null }
   ]
 
   const artDropdownItems = [

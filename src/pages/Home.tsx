@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, User, Eye } from 'lucide-react'
+import HomeArticles from "./HomeArticles"
 
 interface BlogArticle {
   id: string
@@ -24,6 +25,7 @@ const Home = () => {
   const [isExploreTransitioning, setIsExploreTransitioning] = useState(false)
   const [explorePaused, setExplorePaused] = useState(false)
   const [blogArticles, setBlogArticles] = useState<BlogArticle[]>([])
+  const [isLoadingArticles, setIsLoadingArticles] = useState(true)
 
   const roles = ['dreamers', 'artists', 'designers', 'makers', 'coders', 'builders', 'you']
   
@@ -89,13 +91,38 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Load blog articles from localStorage
+  // Load blog articles from API
   useEffect(() => {
-    const loadArticles = () => {
-      const savedArticles = localStorage.getItem('blogArticles')
-      if (savedArticles) {
-        const articles = JSON.parse(savedArticles)
-        setBlogArticles(articles.slice(0, 6)) // Show only first 6 articles
+    const loadArticles = async () => {
+      try {
+        setIsLoadingArticles(true)
+        const res = await fetch('/api/articles')
+        if (!res.ok) {
+          console.warn('Failed to fetch articles from API')
+          return
+        }
+        const data = await res.json()
+        const mapped = data.map((a: any) => ({
+          id: a._id,
+          title: a.title,
+          body: a.body,
+          image: a.image,
+          author: a.author,
+          date: a.date || a.createdAt,
+          views: a.views,
+          category: a.category
+        }))
+        setBlogArticles(mapped.slice(0, 6)) // Show only first 6 articles
+      } catch (error) {
+        console.warn('Error fetching articles:', error)
+        // Fallback: try to load from localStorage if API fails
+        const savedArticles = localStorage.getItem('blogArticles')
+        if (savedArticles) {
+          const articles = JSON.parse(savedArticles)
+          setBlogArticles(articles.slice(0, 6))
+        }
+      } finally {
+        setIsLoadingArticles(false)
       }
     }
 
@@ -270,6 +297,11 @@ const Home = () => {
     return positions[index % positions.length]
   }
 
+  // Function to increment views when clicking on article
+  const incrementViews = async (id: string) => {
+    setBlogArticles((prev) => prev.map((a) => a.id === id ? { ...a, views: a.views + 1 } : a))
+  }
+
   return (
     <div className="pt-16" style={{ backgroundColor: '#3673F5', minHeight: '100vh' }}>
       {/* Hero Section */}
@@ -403,7 +435,7 @@ const Home = () => {
               {[
                 { number: "15+", label: "Community Games", path: "/community-games" },
                 { number: "25+", label: "Comfy Art", path: "/comfy" },
-                { number: "40+", label: "Articles", path: "/blog" },
+                { number: `${blogArticles.length}+`, label: "Articles", path: "/blog" },
                 { number: "12+", label: "Videos", path: "/art/invideo" }
               ].map((stat, index) => (
                 <Link 
@@ -564,109 +596,114 @@ const Home = () => {
 
               {/* Blog Articles Preview */}
               <div className="relative overflow-hidden">
-                <div className="flex overflow-x-auto scrollbar-hide space-x-8 px-8 pb-6" style={{ scrollSnapType: 'x mandatory' }}>
-                  {/* Dynamic Blog Articles */}
-                  {blogArticles.length > 0 ? (
-                    blogArticles.map((article) => (
-                      <Link
-                        key={article.id}
-                        to={`/blog/article/${article.id}`}
-                        className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
-                        style={{ width: '720px', scrollSnapAlign: 'start' }}
-                      >
-                        <div className="flex h-full">
-                          {/* Image half */}
-                          <div className="w-1/2 relative overflow-hidden">
-                            <img
-                              src={article.image}
-                              alt={article.title}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.src = '/comfy/comfy.webp'
-                              }}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/60"></div>
-                            <div className="absolute top-4 left-4">
-                              <span className="px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-medium rounded-full">
-                                {article.category}
-                              </span>
+                {isLoadingArticles ? (
+                  // Loading state
+                  <div className="flex justify-center items-center py-20">
+                    <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  <div className="flex overflow-x-auto scrollbar-hide space-x-8 px-8 pb-6" style={{ scrollSnapType: 'x mandatory' }}>
+                    {/* Dynamic Blog Articles */}
+                    {blogArticles.length > 0 ? (
+                      blogArticles.map((article) => (
+                        <Link
+                          key={article.id}
+                          to={`/blog/article/${article.id}`}
+                          onClick={() => incrementViews(article.id)}
+                          className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
+                          style={{ width: '720px', scrollSnapAlign: 'start' }}
+                        >
+                          <div className="flex h-full">
+                            {/* Image half */}
+                            <div className="w-1/2 relative overflow-hidden">
+                              <img
+                                src={article.image}
+                                alt={article.title}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement
+                                  target.src = '/comfy/comfy.webp'
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/60"></div>
+                              <div className="absolute top-4 left-4">
+                                <span className="px-3 py-1 bg-blue-500/80 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                                  {article.category}
+                                </span>
+                              </div>
+                            </div>
+                            {/* Content half */}
+                            <div className="w-1/2 p-6 flex flex-col justify-between">
+                              <div>
+                                <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
+                                  {article.title}
+                                </h3>
+                                <p className="text-white text-sm line-clamp-4 mb-4">
+                                  {article.body}
+                                </p>
+                              </div>
+                              <div className="space-y-3">
+                                {/* Meta info */}
+                                <div className="flex items-center gap-4 text-xs text-white">
+                                  <div className="flex items-center gap-1">
+                                    <User className="w-3 h-3" />
+                                    <span>{article.author}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Eye className="w-3 h-3" />
+                                    <span>{article.views}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-white">
+                                  <Calendar className="w-3 h-3" />
+                                  <span>{new Date(article.date).toLocaleDateString()}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          {/* Content half */}
-                          <div className="w-1/2 p-6 flex flex-col justify-between">
-                            <div>
+                        </Link>
+                      ))
+                    ) : (
+                      // Show default cards when no articles exist
+                      <>
+                        {/* Sample Article Card */}
+                        <Link
+                          to="/blog"
+                          className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
+                          style={{ width: '720px', scrollSnapAlign: 'start' }}
+                        >
+                          <div className="flex h-full">
+                            {/* Icon half */}
+                            <div className="w-1/2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                              <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+                                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                              </div>
+                            </div>
+                            {/* Content half */}
+                            <div className="w-1/2 p-6 flex flex-col justify-center">
+                              <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm mb-3 w-fit">
+                                Blog
+                              </span>
                               <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
-                                {article.title}
+                                Explore Our Articles
                               </h3>
-                              <p className="text-white text-sm line-clamp-4 mb-4">
-                                {article.body}
+                              <p className="text-white text-base line-clamp-3">
+                                Discover insightful articles, tutorials, and community stories from the Comfy Verse community.
                               </p>
                             </div>
-                            <div className="space-y-3">
-                              {/* Meta info */}
-                              <div className="flex items-center gap-4 text-xs text-white">
-                                <div className="flex items-center gap-1">
-                                  <User className="w-3 h-3" />
-                                  <span>{article.author}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Eye className="w-3 h-3" />
-                                  <span>{article.views}</span>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-1 text-xs text-white">
-                                <Calendar className="w-3 h-3" />
-                                <span>{new Date(article.date).toLocaleDateString()}</span>
-                              </div>
-                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))
-                  ) : (
-                    // Show default cards when no articles exist
-                    <>
-                      {/* Sample Article Card */}
-                      <Link
-                        to="/blog"
-                        className="flex-shrink-0 h-80 bg-gradient-to-br from-gray-800/60 to-gray-900/60 backdrop-blur-sm border border-gray-700/30 rounded-2xl hover:border-gray-600/40 transition-all duration-300 group overflow-hidden shadow-2xl hover:shadow-3xl"
-                        style={{ width: '720px', scrollSnapAlign: 'start' }}
-                      >
-                        <div className="flex h-full">
-                          {/* Icon half */}
-                          <div className="w-1/2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                              </svg>
-                            </div>
-                          </div>
-                          {/* Content half */}
-                          <div className="w-1/2 p-6 flex flex-col justify-center">
-                            <span className="inline-block px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm mb-3 w-fit">
-                              Blog
-                            </span>
-                            <h3 className="text-xl font-bold text-white group-hover:text-blue-300 transition-colors mb-3 line-clamp-2">
-                              Explore Our Articles
-                            </h3>
-                            <p className="text-white text-base line-clamp-3">
-                              Discover insightful articles, tutorials, and community stories from the Comfy Verse community.
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    </>
-                  )}
-                </div>
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </section>
-
-
- 
-      </div>
-    )
-  }
+        </div>
+      )
+    }
 
 export default Home

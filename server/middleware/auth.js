@@ -1,14 +1,21 @@
 const jwt = require('jsonwebtoken')
 
-const JWT_SECRET = process.env.JWT_SECRET || 
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
 
+// middleware to check for admin token
 function requireAdmin(req, res, next) {
   const authHeader = req.headers.authorization || ''
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
-  if (!token) return res.status(401).json({ error: 'Missing token' })
+
+  if (!token) {
+    return res.status(401).json({ error: 'Missing token' })
+  }
+
   try {
     const payload = jwt.verify(token, JWT_SECRET)
-    if (payload.sub !== 'admin') return res.status(403).json({ error: 'Forbidden' })
+    if (payload.sub !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
     next()
   } catch (e) {
     return res.status(401).json({ error: 'Invalid token' })
@@ -16,4 +23,3 @@ function requireAdmin(req, res, next) {
 }
 
 module.exports = { requireAdmin }
-

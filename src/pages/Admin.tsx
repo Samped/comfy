@@ -39,7 +39,14 @@ const Admin = () => {
   }
 
   useEffect(() => {
-    fetchArticles()
+    const token = localStorage.getItem('adminToken')
+    if (!token) {
+      // If no token, redirect to login
+      navigate('/admin/login')
+    } else {
+      // If token exists, load articles
+      fetchArticles()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -51,14 +58,23 @@ const Admin = () => {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this article?')) return
     const token = localStorage.getItem('adminToken') || ''
-    const res = await fetch(`/api/articles/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+    const res = await fetch(`/api/articles/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     if (res.ok) {
       setArticles((prev) => prev.filter((a) => a._id !== id))
+    } else if (res.status === 401) {
+      alert('Your session expired. Please log in again.')
+      localStorage.removeItem('adminToken')
+      navigate('/admin/login')
     }
   }
 
   return (
-    <div className="pt-16 min-h-screen" style={{ backgroundColor: '#0f172a' }}>
+    <div className="pt-16 min-h-screen" style={{ backgroundColor: '#1B3E86' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
@@ -67,13 +83,17 @@ const Admin = () => {
               onClick={fetchArticles}
               className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
             >
-              <span className="inline-flex items-center gap-2"><RefreshCw className="w-4 h-4" /> Refresh</span>
+              <span className="inline-flex items-center gap-2">
+                <RefreshCw className="w-4 h-4" /> Refresh
+              </span>
             </button>
             <button
               onClick={() => navigate('/admin/create')}
               className="px-4 py-2 gradient-bg text-white rounded-lg hover:scale-105 transition"
             >
-              <span className="inline-flex items-center gap-2"><Plus className="w-4 h-4" /> New Article</span>
+              <span className="inline-flex items-center gap-2">
+                <Plus className="w-4 h-4" /> New Article
+              </span>
             </button>
           </div>
         </div>
@@ -93,13 +113,17 @@ const Admin = () => {
                 className="px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white"
               >
                 {categories.map((c) => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
                 ))}
               </select>
               <button
                 onClick={fetchArticles}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition"
-              >Apply</button>
+              >
+                Apply
+              </button>
             </div>
           </div>
         </div>
@@ -111,18 +135,40 @@ const Admin = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((a) => (
-              <div key={a._id} className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/30 rounded-2xl overflow-hidden">
+              <div
+                key={a._id}
+                className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-700/30 rounded-2xl overflow-hidden"
+              >
                 {a.image && (
-                  <div className="h-40 overflow-hidden"><img src={a.image} alt={a.title} className="w-full h-full object-cover" /></div>
+                  <div className="h-40 overflow-hidden">
+                    <img
+                      src={a.image}
+                      alt={a.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 )}
                 <div className="p-4">
-                  <div className="text-xs text-gray-400 mb-2">{new Date(a.date || a._id.substring(0,8)).toLocaleDateString()} • {a.category}</div>
-                  <h3 className="text-white font-semibold mb-2 line-clamp-2">{a.title}</h3>
+                  <div className="text-xs text-gray-400 mb-2">
+                    {new Date(
+                      a.date || a._id.substring(0, 8)
+                    ).toLocaleDateString()}{' '}
+                    • {a.category}
+                  </div>
+                  <h3 className="text-white font-semibold mb-2 line-clamp-2">
+                    {a.title}
+                  </h3>
                   <div className="flex items-center gap-2">
-                    <Link to={`/admin/edit/${a._id}`} className="px-3 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 inline-flex items-center gap-2">
+                    <Link
+                      to={`/admin/edit/${a._id}`}
+                      className="px-3 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 inline-flex items-center gap-2"
+                    >
                       <Edit className="w-4 h-4" /> Edit
                     </Link>
-                    <button onClick={() => handleDelete(a._id)} className="px-3 py-2 bg-red-700 text-white rounded hover:bg-red-600 inline-flex items-center gap-2">
+                    <button
+                      onClick={() => handleDelete(a._id)}
+                      className="px-3 py-2 bg-red-700 text-white rounded hover:bg-red-600 inline-flex items-center gap-2"
+                    >
                       <Trash2 className="w-4 h-4" /> Delete
                     </button>
                   </div>
@@ -137,4 +183,3 @@ const Admin = () => {
 }
 
 export default Admin
-

@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Upload, Save, Eye } from 'lucide-react'
 import { BlogArticle } from './Blog'
+import ReactMarkdown from 'react-markdown'
 import { formatText } from '../utils/textFormatter'
+import remarkGfm from 'remark-gfm'
 
 const CreateBlog = () => {
   const navigate = useNavigate()
@@ -19,15 +21,13 @@ const CreateBlog = () => {
   const [showFormattingGuide, setShowFormattingGuide] = useState(false)
 
   const categories = [
-    'general',
-    'tutorial',
-    'guide',
-    'community',
-    'updates',
-    'tech',
-    'events',
-    'art',
-    'gaming'
+    'General',
+    'Educational',
+    'Guide',
+    'Community',
+    'Updates',
+    'Tech',
+    'Events'
   ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -65,28 +65,47 @@ const CreateBlog = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+  
     if (!formData.title.trim() || !formData.body.trim() || !formData.author.trim()) {
       alert('Please fill in all required fields')
       return
     }
-
+  
+    // Check for token
+    const token = localStorage.getItem('adminToken')
+    if (!token) {
+      alert('No token found. Please log in as admin first.')
+      return
+    }
+  
     setIsSubmitting(true)
-
+  
     try {
-      const token = localStorage.getItem('adminToken') || ''
       const res = await fetch('/api/articles', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Attach token
+        },
         body: JSON.stringify({
           title: formData.title.trim(),
           body: formData.body.trim(),
           image: formData.image || '/comfy/comfy.webp',
           author: formData.author.trim(),
           category: formData.category
-        })
+        }),
       })
-      if (!res.ok) throw new Error('Failed to create')
+  
+      if (!res.ok) {
+        if (res.status === 401) {
+          alert('Unauthorized. Please log in again.')
+          localStorage.removeItem('adminToken') // Clear old/invalid token
+          navigate('/admin-login') // redirect to login page
+          return
+        }
+        throw new Error('Failed to create article')
+      }
+  
       navigate('/admin')
     } catch (error) {
       console.error('Error creating article:', error)
@@ -95,10 +114,11 @@ const CreateBlog = () => {
       setIsSubmitting(false)
     }
   }
+  
 
   if (isPreview) {
     return (
-      <div className="pt-16 min-h-screen" style={{ backgroundColor: '#0f172a' }}>
+      <div className="pt-16 min-h-screen" style={{ backgroundColor: '#1B3E86' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Preview Header */}
           <div className="flex items-center justify-between mb-8">
@@ -145,11 +165,27 @@ const CreateBlog = () => {
               </div>
 
               <div className="prose prose-invert max-w-none">
-                <div className="leading-relaxed">
-                  {formData.body ? formatText(formData.body) : (
-                    <span className="text-gray-400">Article content will appear here...</span>
-                  )}
-                </div>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    img: ({ node, ...props }) => {
+                      // If the src is empty, fallback to formData.image
+                      const src = props.src || imagePreview || '/comfy/comfy.webp'
+                      return (
+                        <img
+                          {...props}
+                          src={src}
+                          className="rounded-lg shadow-md my-4 w-full max-w-full object-cover"
+                        />
+                      )
+                    },
+                    a: ({ node, ...props }) => (
+                      <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline" />
+                    ),
+                  }}
+                >
+                  {formData.body}
+                </ReactMarkdown>
               </div>
             </div>
           </article>
@@ -303,7 +339,7 @@ const CreateBlog = () => {
                 </button>
               </div>
               
-              {/* Formatting Guide */}
+             {/* Formatting Guide */}
               {showFormattingGuide && (
                 <div className="mb-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700/30">
                   <h4 className="text-sm font-semibold text-white mb-3">Text Formatting Guide:</h4>
@@ -320,6 +356,10 @@ const CreateBlog = () => {
                       <div>
                         <span className="text-gray-400">Italic:</span>
                         <code className="ml-2 text-blue-300">*text*</code>
+                      </div>
+                      <div>
+                        <span className="text-gray-400">Image:</span>
+                        <code className="ml-2 text-blue-300">![alt](image-url)</code>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -338,11 +378,11 @@ const CreateBlog = () => {
                     </div>
                   </div>
                   <div className="mt-3 text-xs text-gray-400">
-                    <strong>Examples:</strong> Check out {'{{IMPORTANT}}'} news at [Google](https://google.com) and use `console.log()` for **debugging**.
+                    insert an image like:
+                    <code className="ml-2 text-blue-300">![Comfy Logo](/comfy/comfy.webp)</code>
                   </div>
                 </div>
               )}
-              
               <textarea
                 id="body"
                 name="body"
@@ -355,6 +395,7 @@ Examples:
 - For capital letters: {{IMPORTANT TEXT}}
 - For bold: **bold text**
 - For highlights: ==highlighted text=="
+
                 rows={12}
                 className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
                 required

@@ -33,7 +33,7 @@ const AdminLogin = () => {
   }
 
   return (
-    <div className="pt-16 min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0f172a' }}>
+    <div className="pt-16 min-h-screen flex items-center justify-center" style={{ backgroundColor: '#1B3E86' }}>
       <form onSubmit={handleSubmit} className="glass rounded-2xl p-8 w-full max-w-md">
         <h1 className="text-2xl font-bold text-white mb-6 text-center">Admin Login</h1>
         {error && <div className="text-red-400 mb-4">{error}</div>}
