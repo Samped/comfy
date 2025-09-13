@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, User, Eye } from 'lucide-react'
+const API_BASE = import.meta.env.VITE_API_BASE
 
 interface BlogArticle {
   id: string
@@ -95,7 +96,7 @@ const Home = () => {
     const loadArticles = async () => {
       try {
         setIsLoadingArticles(true)
-        const res = await fetch('/api/articles')
+        const res = await fetch(`${API_BASE}/api/articles`)
         if (!res.ok) {
           console.warn('Failed to fetch articles from API')
           return
