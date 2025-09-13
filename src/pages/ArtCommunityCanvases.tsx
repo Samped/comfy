@@ -5,21 +5,26 @@ const ArtCommunityCanvases = () => {
   
   // Custom canvas titles
   const customTitles = [
+    'InCreatives #1 (we broke excalidraw)',
     'InCreatives #2 (everything worked fine lol)',
-    'InCreatives #1 (we broke excalidraw)'
+    'InCreatives #3 (which cloud are you today)',
+    'InCreatives #4 (A trip to madagascar)',
+    'InCreatives #5 (we stayed longer in madagascar)'
   ]
   
   // Load all images from public/community canvas as URLs (Vite)
   const canvasImages = useMemo(() => {
     const modules = import.meta.glob('/public/community canvas/*', { eager: true, as: 'url' }) as Record<string, string>
-    const items = Object.entries(modules).map(([path, url], index) => {
+    
+    // Sort by filename to maintain predictable order
+    const entries = Object.entries(modules).sort(([a], [b]) => a.localeCompare(b))
+
+    return entries.map(([path, url], index) => {
       const name = path.split('/').pop() || 'canvas'
-      // Use custom titles if available, otherwise use filename without extension
       const displayName = customTitles[index] || name.replace(/\.(png|jpg|jpeg|gif|webp)$/i, '')
       return { name: displayName, url }
     })
-    return items.sort((a, b) => a.name.localeCompare(b.name))
-  }, [])
+  }, [customTitles])
 
   return (
     <div className="pt-16 min-h-screen" style={{ backgroundColor: '#1B3E86' }}>
@@ -111,4 +116,4 @@ const ArtCommunityCanvases = () => {
   )
 }
 
-export default ArtCommunityCanvases 
+export default ArtCommunityCanvases
