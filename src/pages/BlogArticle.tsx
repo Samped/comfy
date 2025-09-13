@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Calendar, User, Eye, Share2 } from 'lucide-react'
 import { BlogArticle } from './Blog'
 import { formatText } from '../utils/textFormatter'
+
 const API_BASE = import.meta.env.VITE_API_BASE
 
 const BlogArticleView = () => {
