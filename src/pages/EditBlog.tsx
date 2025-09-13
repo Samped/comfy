@@ -58,7 +58,7 @@ const EditBlog = () => {
         })
         setImagePreview(article.image)
       } catch {
-        navigate(`${API_BASE}/admin`)
+        navigate('/admin')
       } finally {
         setLoading(false)
       }
@@ -125,7 +125,7 @@ const EditBlog = () => {
         })
       })
       if (!res.ok) throw new Error('Failed to update')
-      navigate(`${API_BASE}/admin`)
+      navigate(`/admin`)
     } catch (error) {
       console.error('Error updating article:', error)
       alert('Failed to update article. Please try again.')

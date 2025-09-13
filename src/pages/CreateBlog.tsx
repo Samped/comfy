@@ -101,13 +101,13 @@ const CreateBlog = () => {
         if (res.status === 401) {
           alert('Unauthorized. Please log in again.')
           localStorage.removeItem('adminToken') // Clear old/invalid token
-          navigate(`${API_BASE}/admin-login`) // redirect to login page
+          navigate(`/admin-login`) // redirect to login page
           return
         }
         throw new Error('Failed to create article')
       }
   
-      navigate(`${API_BASE}/admin`)
+      navigate(`/admin`)
     } catch (error) {
       console.error('Error creating article:', error)
       alert('Failed to create article. Please try again.')
